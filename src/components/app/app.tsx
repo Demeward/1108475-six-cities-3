@@ -5,23 +5,28 @@ import OfferPage from '../../pages/offer-page/offer-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import PrivateRoute from '../private-route/private-route';
 import { AppRoute, AuthorizationStatus } from '../../const';
+import { Offer } from '../../types/offer';
+import { Comment } from '../../types/comment';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
 type AppProps = {
-  offersAmount: number;
+  offers: Offer[];
+  reviews: Comment[];
 }
 
-function App({ offersAmount }: AppProps) {
+function App({ offers, reviews }: AppProps) {
+  const authorizationStatus: AuthorizationStatus = AuthorizationStatus.Auth;
+
   return (
     <HelmetProvider>
       <BrowserRouter>
         <Routes>
           <Route path={AppRoute.Main}>
-            <Route index element={<MainPage offersAmount={offersAmount} />} />
-            <Route path={AppRoute.Login} element={<LoginPage authorizationStatus={AuthorizationStatus.NotAuth}/>}/>
-            <Route path={AppRoute.Favorites} element={<PrivateRoute authorizationStatus={AuthorizationStatus.NotAuth}><FavoritesPage /></PrivateRoute>} />
-            <Route path={AppRoute.Offer} element={<OfferPage authorizationStatus={AuthorizationStatus.NotAuth} />} />
+            <Route index element={<MainPage offers={offers} authorizationStatus={authorizationStatus} />} />
+            <Route path={AppRoute.Login} element={<LoginPage authorizationStatus={authorizationStatus}/>}/>
+            <Route path={AppRoute.Favorites} element={<PrivateRoute authorizationStatus={authorizationStatus}><FavoritesPage offers={offers} authorizationStatus={authorizationStatus} /></PrivateRoute>} />
+            <Route path={AppRoute.Offer} element={<OfferPage authorizationStatus={authorizationStatus} offers={offers} reviews={reviews}/>} />
           </Route>
           <Route path={AppRoute.NotFound} element={<NotFoundPage />} />
         </Routes>

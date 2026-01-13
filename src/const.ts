@@ -11,3 +11,11 @@ export enum AuthorizationStatus {
   NotAuth = 'NOT_AUTHORIZED',
   Unknown = 'UNKNOWN'
 }
+
+export enum OfferCardType {
+  Cities = 'cities',
+  Near = 'near-places',
+  Favorites = 'favorites'
+}
+
+export const CITIES: string[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];

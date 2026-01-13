@@ -1,33 +1,50 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthorizationStatus } from '../../const';
+import { AuthorizationStatus, OfferCardType } from '../../const';
+import { Offer } from '../../types/offer';
 
 
 type OfferCardProps = {
   authorizationStatus: AuthorizationStatus;
-  offerId: number;
+  offer: Offer;
+  offersType: OfferCardType;
+  onActiveOfferChange?: (arg: Offer | null) => void;
 }
 
-function OfferCard({authorizationStatus, offerId}: OfferCardProps): JSX.Element {
+function OfferCard({ authorizationStatus, offer, offersType, onActiveOfferChange }: OfferCardProps): JSX.Element {
   const navigate = useNavigate();
+  const { id, title, type, price, isFavorite, isPremium, rating, previewImage} = offer;
 
   return (
-    <article className="cities__card place-card">
-      <div className="place-card__mark">
-        <span>Premium</span>
-      </div>
-      <div className="cities__image-wrapper place-card__image-wrapper">
-        <Link to={`/offer/${offerId}`}>
-          <img className="place-card__image" src="img/apartment-01.jpg" width={260} height={200} alt="Place image" />
+    <article className={`${offersType}__card place-card`}
+      onMouseEnter={() => {
+        if (onActiveOfferChange) {
+          onActiveOfferChange(offer);
+        }
+      }}
+      onMouseLeave={() => {
+        if (onActiveOfferChange) {
+          onActiveOfferChange(null);
+        }
+      }}
+    >
+      {isPremium ?
+        <div className="place-card__mark">
+          <span>Premium</span>
+        </div>
+        : ''}
+      <div className={`${offersType}__image-wrapper place-card__image-wrapper`}>
+        <Link to={`/offer/${id}`}>
+          <img className="place-card__image" src={previewImage} width={offersType === OfferCardType.Favorites ? 150 : 260} height={offersType === OfferCardType.Favorites ? 110 : 200} alt="Place image" />
         </Link>
       </div>
-      <div className="place-card__info">
+      <div className={`${(offersType) === OfferCardType.Favorites ? 'favorites__card-info' : ''} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">€120</b>
+            <b className="place-card__price-value">€{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           {
-            <button className="place-card__bookmark-button button" type="button" onClick={() => {
+            <button className={`place-card__bookmark-button ${(isFavorite) ? 'place-card__bookmark-button--active' : ''} button`} type="button" onClick={() => {
               if (authorizationStatus !== AuthorizationStatus.Auth) {
                 navigate('/login');
               }
@@ -42,14 +59,14 @@ function OfferCard({authorizationStatus, offerId}: OfferCardProps): JSX.Element 
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: '80%' }} />
+            <span style={{ width: `${Math.round(rating) * 20}%` }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`/offer/${offerId}`}>Beautiful &amp; luxurious apartment at great location</Link>
+          <Link to={`/offer/${id}`}>{title}</Link>
         </h2>
-        <p className="place-card__type">Apartment</p>
+        <p className="place-card__type">{type}</p>
       </div>
     </article>
   );
