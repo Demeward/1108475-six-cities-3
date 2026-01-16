@@ -1,6 +1,6 @@
+import { Offer } from '../types/offer';
 
-
-const offers = [
+const offers: Offer[] = [
   {
     id: '1',
     title: 'Beautiful & luxurious studio at great location',
@@ -11,13 +11,13 @@ const offers = [
       location: {
         latitude: 52.3909553943508,
         longitude: 4.85309666406198,
-        zoom: 8
+        zoom: 10
       }
     },
     location: {
       latitude: 52.3909553943508,
       longitude: 4.85309666406198,
-      zoom: 8
+      zoom: 10
     },
     isFavorite: false,
     isPremium: true,
@@ -48,13 +48,13 @@ const offers = [
       location: {
         latitude: 52.3609553943508,
         longitude: 4.85309666406198,
-        zoom: 8
+        zoom: 10
       }
     },
     location: {
       latitude: 52.3609553943508,
       longitude: 4.85309666406198,
-      zoom: 8
+      zoom: 10
     },
     isFavorite: true,
     isPremium: true,
@@ -85,13 +85,13 @@ const offers = [
       location: {
         latitude: 52.3909553943508,
         longitude: 4.929309666406198,
-        zoom: 8
+        zoom: 10
       }
     },
     location: {
       latitude: 52.3909553943508,
       longitude: 4.929309666406198,
-      zoom: 8
+      zoom: 10
     },
     isFavorite: true,
     isPremium: false,
@@ -122,13 +122,13 @@ const offers = [
       location: {
         latitude: 52.3809553943508,
         longitude: 4.939309666406198,
-        zoom: 8
+        zoom: 10
       }
     },
     location: {
       latitude: 52.3809553943508,
       longitude: 4.939309666406198,
-      zoom: 8
+      zoom: 10
     },
     isFavorite: false,
     isPremium: false,

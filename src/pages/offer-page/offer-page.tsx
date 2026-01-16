@@ -3,7 +3,7 @@ import ReviewForm from '../../components/review-form/review-form';
 import Review from '../../components/review/review';
 import NotFoundPage from '../not-found-page/not-found-page';
 import OffersList from '../../components/offers-list/offers-list';
-import { AuthorizationStatus, OfferCardType } from '../../const';
+import { AppRoute, AuthorizationStatus, OfferCardType } from '../../const';
 import { Offer } from '../../types/offer';
 import { Comment } from '../../types/comment';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -28,6 +28,12 @@ function OfferPage({authorizationStatus, offers, reviews}: OfferPageProps): JSX.
 
   const { title, type, price, isFavorite, isPremium, rating, description, bedrooms, goods, host, images, maxAdults } = currentOffer;
   const nearOffers: Offer[] = offers.filter((offer) => offer.id !== currentOffer.id);
+
+  const handleFavoriteButtonClick = () => {
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+    }
+  };
 
   return (
     <div className="page">
@@ -58,12 +64,7 @@ function OfferPage({authorizationStatus, offers, reviews}: OfferPageProps): JSX.
                 : ''}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{title}</h1>
-                <button className={`offer__bookmark-button ${(isFavorite) ? 'offer__bookmark-button--active' : ''} button`} type="button" onClick={() => {
-                  if (authorizationStatus !== AuthorizationStatus.Auth) {
-                    navigate('/login');
-                  }
-                }}
-                >
+                <button className={`offer__bookmark-button ${(isFavorite) ? 'offer__bookmark-button--active' : ''} button`} type="button" onClick={handleFavoriteButtonClick}>
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark" />
                   </svg>

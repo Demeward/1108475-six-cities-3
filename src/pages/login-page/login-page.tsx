@@ -1,16 +1,16 @@
 import Logo from '../../components/logo/logo';
 import { Navigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 
 type LoginPageProps = {
   authorizationStatus: AuthorizationStatus;
 }
 
-function LoginPage({ authorizationStatus }: LoginPageProps): JSX.Element {
+function LoginPage({ authorizationStatus }: LoginPageProps) {
 
   if (authorizationStatus === AuthorizationStatus.Auth) {
-    return <Navigate to='/' />;
+    return <Navigate to={AppRoute.Main} />;
   }
 
   return (

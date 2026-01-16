@@ -1,6 +1,7 @@
-import { CITIES } from '../../const';
+import { AppRoute, CITIES } from '../../const';
+import { Link } from 'react-router-dom';
 
-function CitiesTabs(): JSX.Element {
+function CitiesTabs() {
   return (
     <div className="tabs">
       <section className="locations container">
@@ -8,9 +9,9 @@ function CitiesTabs(): JSX.Element {
           {
             CITIES.map((city) => (
               <li key={city} className="locations__item">
-                <a className={`locations__item-link tabs__item ${city === 'Amsterdam' ? 'tabs__item--active' : ''}`} href="#">
+                <Link to={AppRoute.Main} className={`locations__item-link tabs__item ${city === 'Amsterdam' ? 'tabs__item--active' : ''}`}>
                   <span>{city}</span>
-                </a>
+                </Link>
               </li>
             ))
           }

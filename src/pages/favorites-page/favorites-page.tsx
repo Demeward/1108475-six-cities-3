@@ -1,5 +1,6 @@
 import Header from '../../components/header/header';
 import OffersList from '../../components/offers-list/offers-list';
+import { AppRoute } from '../../const';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AuthorizationStatus, OfferCardType } from '../../const';
@@ -11,7 +12,7 @@ type FavoritesPageProps = {
   authorizationStatus: AuthorizationStatus;
 }
 
-function FavoritesPage({offers, authorizationStatus}: FavoritesPageProps): JSX.Element {
+function FavoritesPage({offers, authorizationStatus}: FavoritesPageProps) {
   const favoritesOffers = offers.filter((offer) => offer.isFavorite);
   const favoritesCities = [...new Set(favoritesOffers.map((offer) => offer.city.name))];
 
@@ -34,9 +35,9 @@ function FavoritesPage({offers, authorizationStatus}: FavoritesPageProps): JSX.E
                     <li className="favorites__locations-items" key={city}>
                       <div className="favorites__locations locations locations--current">
                         <div className="locations__item">
-                          <a className="locations__item-link" href="#">
+                          <Link to={AppRoute.Main} className="locations__item-link">
                             <span>{city}</span>
-                          </a>
+                          </Link>
                         </div>
                       </div>
                       <div className="favorites__places">
@@ -51,7 +52,7 @@ function FavoritesPage({offers, authorizationStatus}: FavoritesPageProps): JSX.E
         </div>
       </main>
       <footer className="footer container">
-        <Link className="footer__logo-link" to='/'>
+        <Link className="footer__logo-link" to={AppRoute.Main}>
           <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33"/>
         </Link>
       </footer>
