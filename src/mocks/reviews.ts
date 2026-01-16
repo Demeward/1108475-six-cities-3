@@ -1,6 +1,6 @@
+import { Comment } from '../types/comment';
 
-
-const reviews = [
+const reviews: Comment[] = [
   {
     id: '1',
     comment: 'The deluxe room was a quite comfortable one with all the adequate facilities. The only thing that made me feel uncomfortable was the rude behavior of an impolite staff at the reception desk.',

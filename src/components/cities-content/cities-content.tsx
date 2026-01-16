@@ -9,13 +9,11 @@ type CitiesContentProps = {
   authorizationStatus: AuthorizationStatus;
 }
 
-function CitiesContent({offers, authorizationStatus}: CitiesContentProps): JSX.Element {
+function CitiesContent({offers, authorizationStatus}: CitiesContentProps) {
   const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
 
-  const onActiveOfferChange = (offer: Offer | null) => setActiveOffer(offer);
+  const handleActiveOfferChange = (offer: Offer | null) => setActiveOffer(offer);
 
-  // eslint-disable-next-line no-console
-  console.log(activeOffer);
 
   return (
     <div className="cities">
@@ -39,11 +37,11 @@ function CitiesContent({offers, authorizationStatus}: CitiesContentProps): JSX.E
             </ul>
           </form>
           <div className="cities__places-list places__list tabs__content">
-            <OffersList authorizationStatus={authorizationStatus} offers={offers} offersType={OfferCardType.Cities} onActiveOfferChange={onActiveOfferChange}/>
+            <OffersList authorizationStatus={authorizationStatus} offers={offers} offersType={OfferCardType.Cities} onActiveOfferChange={handleActiveOfferChange}/>
           </div>
         </section>
         <div className="cities__right-section">
-          <OffersMap />
+          <OffersMap offers={offers} activeOffer={activeOffer} />
         </div>
       </div>
     </div>

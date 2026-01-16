@@ -10,7 +10,7 @@ type MainPageProps = {
 }
 
 
-function MainPage({ offers, authorizationStatus }: MainPageProps): JSX.Element {
+function MainPage({ offers, authorizationStatus }: MainPageProps) {
   return (
     <div className="page page--gray page--main">
       <Header authorizationStatus={authorizationStatus}/>

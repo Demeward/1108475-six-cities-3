@@ -1,12 +1,13 @@
 import Logo from '../logo/logo';
-import { Link } from 'react-router-dom';
 import { AuthorizationStatus } from '../../const';
+import UnauthorizedMenu from '../unauthorized-menu/unauthorized-menu';
+import AuthorizedMenu from '../authorized-menu/authorized-menu';
 
 type HeaderProps = {
   authorizationStatus: AuthorizationStatus;
 }
 
-function Header({ authorizationStatus }: HeaderProps): JSX.Element {
+function Header({ authorizationStatus }: HeaderProps) {
   return (
     <header className="header">
       <div className="container">
@@ -16,28 +17,10 @@ function Header({ authorizationStatus }: HeaderProps): JSX.Element {
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
-              {authorizationStatus !== AuthorizationStatus.Auth ?
-                <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to='/login'>
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__login">Sign in</span>
-                  </Link>
-                </li>
+              {authorizationStatus === AuthorizationStatus.Auth ?
+                <AuthorizedMenu />
                 :
-                <>
-                  <li className="header__nav-item user">
-                    <Link className="header__nav-link header__nav-link--profile" to='/favorites'>
-                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                      <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                      <span className="header__favorite-count">3</span>
-                    </Link>
-                  </li>
-                  <li className="header__nav-item">
-                    <a className="header__nav-link" href="#">
-                      <span className="header__signout">Sign out</span>
-                    </a>
-                  </li>
-                </>}
+                <UnauthorizedMenu />}
             </ul>
           </nav>
         </div>

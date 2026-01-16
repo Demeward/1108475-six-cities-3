@@ -4,7 +4,7 @@ type ReviewProps = {
   review: Comment;
 }
 
-function Review({review}: ReviewProps): JSX.Element {
+function Review({review}: ReviewProps) {
   const {user, date, comment, rating} = review;
 
 
