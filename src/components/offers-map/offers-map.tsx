@@ -41,9 +41,7 @@ function OffersMap({offers, activeOffer}: OffersMapProps) {
   }, [map, offers, activeOffer]);
 
   return (
-    <section className="cities__map map">
-      <div style={{height: '100%'}} ref={mapRef}></div>
-    </section >
+    <div style={{height: '100%'}} ref={mapRef}></div>
   );
 }
 

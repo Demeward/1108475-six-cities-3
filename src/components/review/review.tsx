@@ -1,12 +1,13 @@
 import { Comment } from '../../types/comment';
 
+const dateFormat = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' });
+
 type ReviewProps = {
   review: Comment;
 }
 
 function Review({review}: ReviewProps) {
   const {user, date, comment, rating} = review;
-
 
   return (
     <li className="reviews__item">
@@ -24,7 +25,7 @@ function Review({review}: ReviewProps) {
           </div>
         </div>
         <p className="reviews__text">{comment}</p>
-        <time className="reviews__time" dateTime={date}>April 2019</time>
+        <time className="reviews__time" dateTime={date}>{dateFormat.format(new Date(date))}</time>
       </div>
     </li>
   );

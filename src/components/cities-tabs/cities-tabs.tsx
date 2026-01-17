@@ -1,4 +1,4 @@
-import { AppRoute, CITIES } from '../../const';
+import { CITIES } from '../../const';
 import { Link } from 'react-router-dom';
 
 function CitiesTabs() {
@@ -9,7 +9,7 @@ function CitiesTabs() {
           {
             CITIES.map((city) => (
               <li key={city} className="locations__item">
-                <Link to={AppRoute.Main} className={`locations__item-link tabs__item ${city === 'Amsterdam' ? 'tabs__item--active' : ''}`}>
+                <Link to={`/?city=${city}`} className={`locations__item-link tabs__item ${city === 'Amsterdam' ? 'tabs__item--active' : ''}`}>
                   <span>{city}</span>
                 </Link>
               </li>

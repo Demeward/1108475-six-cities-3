@@ -1,8 +1,8 @@
 import Header from '../../components/header/header';
-import ReviewForm from '../../components/review-form/review-form';
-import Review from '../../components/review/review';
+import Reviews from '../../components/reviews/reviews';
 import NotFoundPage from '../not-found-page/not-found-page';
 import OffersList from '../../components/offers-list/offers-list';
+import OffersMap from '../../components/offers-map/offers-map';
 import { AppRoute, AuthorizationStatus, OfferCardType } from '../../const';
 import { Offer } from '../../types/offer';
 import { Comment } from '../../types/comment';
@@ -15,7 +15,7 @@ type OfferPageProps = {
   reviews: Comment[];
 }
 
-function OfferPage({authorizationStatus, offers, reviews}: OfferPageProps): JSX.Element {
+function OfferPage({authorizationStatus, offers, reviews}: OfferPageProps) {
   const navigate = useNavigate();
   const { id: currentId } = useParams();
   const currentOffer: Offer | undefined = offers.find((offer) => currentId === offer.id);
@@ -110,20 +110,12 @@ function OfferPage({authorizationStatus, offers, reviews}: OfferPageProps): JSX.
                   <p className="offer__text">{description}</p>
                 </div>
               </div>
-              <section className="offer__reviews reviews">
-                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>
-                <ul className="reviews__list">
-                  {
-                    reviews.map((review) => <Review key={review.id} review={review}/>)
-                  }
-                </ul>
-                {authorizationStatus === AuthorizationStatus.Auth ?
-                  <ReviewForm />
-                  : ''}
-              </section>
+              <Reviews reviews={reviews} authorizationStatus={authorizationStatus}/>
             </div>
           </div>
-          <section className="offer__map map"></section>
+          <section className="offer__map map">
+            <OffersMap offers={[...nearOffers, currentOffer]} activeOffer={currentOffer} />
+          </section>
         </section>
         <div className="container">
           <section className="near-places places">
