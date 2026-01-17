@@ -1,7 +1,8 @@
 import Logo from '../../components/logo/logo';
 import { Navigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus, CITIES } from '../../const';
+import { getRandomCity } from '../../utils';
 
 type LoginPageProps = {
   authorizationStatus: AuthorizationStatus;
@@ -12,6 +13,8 @@ function LoginPage({ authorizationStatus }: LoginPageProps) {
   if (authorizationStatus === AuthorizationStatus.Auth) {
     return <Navigate to={AppRoute.Main} />;
   }
+
+  const randomCity: string = getRandomCity(CITIES);
 
   return (
     <div className="page page--gray page--login">
@@ -46,8 +49,8 @@ function LoginPage({ authorizationStatus }: LoginPageProps) {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link className="locations__item-link" to='/'>
-                <span>Amsterdam</span>
+              <Link className="locations__item-link" to={`/?city=${randomCity}`}>
+                <span>{randomCity}</span>
               </Link>
             </div>
           </section>

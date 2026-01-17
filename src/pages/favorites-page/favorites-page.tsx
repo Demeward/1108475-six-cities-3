@@ -35,7 +35,7 @@ function FavoritesPage({offers, authorizationStatus}: FavoritesPageProps) {
                     <li className="favorites__locations-items" key={city}>
                       <div className="favorites__locations locations locations--current">
                         <div className="locations__item">
-                          <Link to={AppRoute.Main} className="locations__item-link">
+                          <Link to={`/?city=${city}`} className="locations__item-link">
                             <span>{city}</span>
                           </Link>
                         </div>

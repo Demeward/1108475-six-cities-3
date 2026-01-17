@@ -41,7 +41,9 @@ function CitiesContent({offers, authorizationStatus}: CitiesContentProps) {
           </div>
         </section>
         <div className="cities__right-section">
-          <OffersMap offers={offers} activeOffer={activeOffer} />
+          <section className="cities__map map">
+            <OffersMap offers={offers} activeOffer={activeOffer} />
+          </section>
         </div>
       </div>
     </div>
