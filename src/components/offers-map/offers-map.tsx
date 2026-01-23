@@ -22,8 +22,9 @@ type OffersMapProps = {
 }
 
 function OffersMap({offers, activeOffer}: OffersMapProps) {
+  const { location } = offers[0].city;
   const mapRef = useRef(null);
-  const map = useMap(mapRef, offers[0].city);
+  const map = useMap(mapRef, location);
 
   useEffect(() => {
     if (map) {
@@ -39,6 +40,14 @@ function OffersMap({offers, activeOffer}: OffersMapProps) {
       });
     }
   }, [map, offers, activeOffer]);
+
+  useEffect(() => {
+    map?.setView(
+      {
+        lat: location.latitude,
+        lng: location.longitude
+      }, location.zoom);
+  }, [map, location.latitude, location.longitude, location.zoom]);
 
   return (
     <div style={{height: '100%'}} ref={mapRef}></div>

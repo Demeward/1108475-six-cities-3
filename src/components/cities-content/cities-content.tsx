@@ -3,14 +3,18 @@ import OffersMap from '../offers-map/offers-map';
 import { Offer } from '../../types/offer';
 import { AuthorizationStatus, OfferCardType } from '../../const';
 import { useState } from 'react';
+import { useAppSelector } from '../../store';
 
 type CitiesContentProps = {
-  offers: Offer[];
   authorizationStatus: AuthorizationStatus;
 }
 
-function CitiesContent({offers, authorizationStatus}: CitiesContentProps) {
+function CitiesContent({authorizationStatus}: CitiesContentProps) {
   const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
+  const offers = useAppSelector((state) => state.offers);
+  const activeCity = useAppSelector((state) => state.activeCity);
+
+  const cityOffers: Offer[] = offers.filter((offer) => offer.city.name === activeCity);
 
   const handleActiveOfferChange = (offer: Offer | null) => setActiveOffer(offer);
 
@@ -20,7 +24,7 @@ function CitiesContent({offers, authorizationStatus}: CitiesContentProps) {
       <div className="cities__places-container container">
         <section className="cities__places places">
           <h2 className="visually-hidden">Places</h2>
-          <b className="places__found">{offers.length} places to stay in Amsterdam</b>
+          <b className="places__found">{cityOffers.length} places to stay in {activeCity}</b>
           <form className="places__sorting" action="#" method="get">
             <span className="places__sorting-caption">Sort by</span>
             <span className="places__sorting-type" tabIndex={0}>
@@ -37,12 +41,12 @@ function CitiesContent({offers, authorizationStatus}: CitiesContentProps) {
             </ul>
           </form>
           <div className="cities__places-list places__list tabs__content">
-            <OffersList authorizationStatus={authorizationStatus} offers={offers} offersType={OfferCardType.Cities} onActiveOfferChange={handleActiveOfferChange}/>
+            <OffersList authorizationStatus={authorizationStatus} offers={cityOffers} offersType={OfferCardType.Cities} onActiveOfferChange={handleActiveOfferChange}/>
           </div>
         </section>
         <div className="cities__right-section">
           <section className="cities__map map">
-            <OffersMap offers={offers} activeOffer={activeOffer} />
+            {cityOffers.length ? <OffersMap offers={cityOffers} activeOffer={activeOffer} /> : ''}
           </section>
         </div>
       </div>
