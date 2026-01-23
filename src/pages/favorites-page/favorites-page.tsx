@@ -4,15 +4,17 @@ import { AppRoute } from '../../const';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AuthorizationStatus, OfferCardType } from '../../const';
-import { Offer } from '../../types/offer';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { changeCity } from '../../store/main/action';
 
 
 type FavoritesPageProps = {
-  offers: Offer[];
   authorizationStatus: AuthorizationStatus;
 }
 
-function FavoritesPage({offers, authorizationStatus}: FavoritesPageProps) {
+function FavoritesPage({authorizationStatus}: FavoritesPageProps) {
+  const dispatch = useAppDispatch();
+  const offers = useAppSelector((state) => state.offers);
   const favoritesOffers = offers.filter((offer) => offer.isFavorite);
   const favoritesCities = [...new Set(favoritesOffers.map((offer) => offer.city.name))];
 
@@ -35,7 +37,7 @@ function FavoritesPage({offers, authorizationStatus}: FavoritesPageProps) {
                     <li className="favorites__locations-items" key={city}>
                       <div className="favorites__locations locations locations--current">
                         <div className="locations__item">
-                          <Link to={`/?city=${city}`} className="locations__item-link">
+                          <Link className="locations__item-link" to={{ pathname: AppRoute.Main, search: `?city=${city}` }} onClick={() => dispatch(changeCity(city))}>
                             <span>{city}</span>
                           </Link>
                         </div>

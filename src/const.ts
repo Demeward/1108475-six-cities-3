@@ -18,4 +18,9 @@ export enum OfferCardType {
   Favorites = 'favorites'
 }
 
+export enum Action {
+  ChangeCity = 'main/changeCity',
+  FillOffers = 'main/fillOffers'
+}
+
 export const CITIES: string[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];

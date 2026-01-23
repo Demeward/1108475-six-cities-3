@@ -8,15 +8,16 @@ import { Offer } from '../../types/offer';
 import { Comment } from '../../types/comment';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { useAppSelector } from '../../store';
 
 type OfferPageProps = {
   authorizationStatus: AuthorizationStatus;
-  offers: Offer[];
   reviews: Comment[];
 }
 
-function OfferPage({authorizationStatus, offers, reviews}: OfferPageProps) {
+function OfferPage({authorizationStatus, reviews}: OfferPageProps) {
   const navigate = useNavigate();
+  const offers = useAppSelector((state) => state.offers);
   const { id: currentId } = useParams();
   const currentOffer: Offer | undefined = offers.find((offer) => currentId === offer.id);
 

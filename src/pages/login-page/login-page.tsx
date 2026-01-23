@@ -3,12 +3,15 @@ import { Navigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AppRoute, AuthorizationStatus, CITIES } from '../../const';
 import { getRandomCity } from '../../utils';
+import { useAppDispatch } from '../../store';
+import { changeCity } from '../../store/main/action';
 
 type LoginPageProps = {
   authorizationStatus: AuthorizationStatus;
 }
 
 function LoginPage({ authorizationStatus }: LoginPageProps) {
+  const dispatch = useAppDispatch();
 
   if (authorizationStatus === AuthorizationStatus.Auth) {
     return <Navigate to={AppRoute.Main} />;
@@ -49,7 +52,7 @@ function LoginPage({ authorizationStatus }: LoginPageProps) {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link className="locations__item-link" to={`/?city=${randomCity}`}>
+              <Link className="locations__item-link" to={{ pathname: AppRoute.Main, search: `?city=${randomCity}` }} onClick={() => dispatch(changeCity(randomCity))}>
                 <span>{randomCity}</span>
               </Link>
             </div>
