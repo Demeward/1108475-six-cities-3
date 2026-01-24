@@ -18,8 +18,16 @@ export enum OfferCardType {
   Favorites = 'favorites'
 }
 
+export enum Sorting {
+  Popular = 'Popular',
+  LowToHigh = 'Price: low to high',
+  HighToLow = 'Price: hight to low',
+  TopRated = 'Top rated first'
+}
+
 export enum Action {
   ChangeCity = 'main/changeCity',
+  ChangeSorting = 'main/changeSorting',
   FillOffers = 'main/fillOffers'
 }
 

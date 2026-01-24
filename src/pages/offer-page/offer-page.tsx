@@ -28,7 +28,7 @@ function OfferPage({authorizationStatus, reviews}: OfferPageProps) {
   }
 
   const { title, type, price, isFavorite, isPremium, rating, description, bedrooms, goods, host, images, maxAdults } = currentOffer;
-  const nearOffers: Offer[] = offers.filter((offer) => offer.id !== currentOffer.id);
+  const nearOffers: Offer[] = offers.filter((offer) => offer.id !== currentOffer.id && offer.city.name === currentOffer.city.name);
 
   const handleFavoriteButtonClick = () => {
     if (authorizationStatus !== AuthorizationStatus.Auth) {
