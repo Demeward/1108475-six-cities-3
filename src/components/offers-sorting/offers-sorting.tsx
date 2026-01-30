@@ -1,7 +1,7 @@
 import { Sorting } from '../../const';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { changeSorting } from '../../store/main/action';
+import { changeSorting } from '../../store/main/reducer';
 
 function OffersSorting() {
   const dispatch = useAppDispatch();

@@ -4,14 +4,23 @@ import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import OfferPage from '../../pages/offer-page/offer-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import PrivateRoute from '../private-route/private-route';
+import Loader from '../loader/loader';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { reviews } from '../../mocks/reviews';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { useAppSelector } from '../../store';
 
 
 function App() {
+  const areOffersLoading = useAppSelector((state) => state.areOffersLoading);
   const authorizationStatus: AuthorizationStatus = AuthorizationStatus.Auth;
+
+  if (areOffersLoading) {
+    return (
+      <Loader />
+    );
+  }
 
   return (
     <HelmetProvider>

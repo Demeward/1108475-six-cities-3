@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AuthorizationStatus, OfferCardType } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { changeCity } from '../../store/main/action';
+import { changeCity } from '../../store/main/reducer';
 
 
 type FavoritesPageProps = {

@@ -1,7 +1,7 @@
 import { AppRoute, CITIES } from '../../const';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { changeCity } from '../../store/main/action';
+import { changeCity } from '../../store/main/reducer';
 
 function CitiesTabs() {
   const dispatch = useAppDispatch();
