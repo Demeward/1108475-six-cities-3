@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { AppRoute, AuthorizationStatus, CITIES } from '../../const';
 import { getRandomCity } from '../../utils';
 import { useAppDispatch } from '../../store';
-import { changeCity } from '../../store/main/action';
+import { changeCity } from '../../store/main/reducer';
 
 type LoginPageProps = {
   authorizationStatus: AuthorizationStatus;

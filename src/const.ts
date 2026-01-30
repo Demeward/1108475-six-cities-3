@@ -6,6 +6,12 @@ export enum AppRoute {
   NotFound = '*',
 }
 
+export enum APIRoute {
+  Offers = '/offers',
+  Login = '/login',
+  Logout = '/logout'
+}
+
 export enum AuthorizationStatus {
   Auth = 'AUTHORIZED',
   NotAuth = 'NOT_AUTHORIZED',
@@ -25,10 +31,6 @@ export enum Sorting {
   TopRated = 'Top rated first'
 }
 
-export enum Action {
-  ChangeCity = 'main/changeCity',
-  ChangeSorting = 'main/changeSorting',
-  FillOffers = 'main/fillOffers'
-}
+export const ERROR_MESSAGE_TIMEOUT = 3000;
 
 export const CITIES: string[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
