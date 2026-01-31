@@ -2,19 +2,16 @@ import OffersSorting from '../offers-sorting/offers-sorting';
 import OffersList from '../offers-list/offers-list';
 import OffersMap from '../offers-map/offers-map';
 import { Offer } from '../../types/offer';
-import { AuthorizationStatus, OfferCardType } from '../../const';
+import { OfferCardType } from '../../const';
 import { useState } from 'react';
 import { useAppSelector } from '../../store';
-import { selectFilteredOffers } from '../../store/main/reducer';
+import { selectFilteredOffers, getActiveCity } from '../../store/main/reducer';
 
-type CitiesContentProps = {
-  authorizationStatus: AuthorizationStatus;
-}
 
-function CitiesContent({authorizationStatus}: CitiesContentProps) {
+function CitiesContent() {
   const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
   const offers = useAppSelector(selectFilteredOffers);
-  const activeCity = useAppSelector((state) => state.activeCity);
+  const activeCity = useAppSelector(getActiveCity);
 
   const handleActiveOfferChange = (offer: Offer | null) => setActiveOffer(offer);
 
@@ -27,7 +24,7 @@ function CitiesContent({authorizationStatus}: CitiesContentProps) {
           <b className="places__found">{offers.length} places to stay in {activeCity}</b>
           <OffersSorting />
           <div className="cities__places-list places__list tabs__content">
-            <OffersList authorizationStatus={authorizationStatus} offers={offers} offersType={OfferCardType.Cities} onActiveOfferChange={handleActiveOfferChange}/>
+            <OffersList offers={offers} offersType={OfferCardType.Cities} onActiveOfferChange={handleActiveOfferChange}/>
           </div>
         </section>
         <div className="cities__right-section">

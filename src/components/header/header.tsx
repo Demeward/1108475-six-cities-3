@@ -2,12 +2,13 @@ import Logo from '../logo/logo';
 import { AuthorizationStatus } from '../../const';
 import UnauthorizedMenu from '../unauthorized-menu/unauthorized-menu';
 import AuthorizedMenu from '../authorized-menu/authorized-menu';
+import { useAppSelector } from '../../store';
+import { getAuthorizationStatus } from '../../store/user/reducer';
 
-type HeaderProps = {
-  authorizationStatus: AuthorizationStatus;
-}
 
-function Header({ authorizationStatus }: HeaderProps) {
+function Header() {
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+
   return (
     <header className="header">
       <div className="container">

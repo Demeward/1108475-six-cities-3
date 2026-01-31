@@ -1,7 +1,7 @@
 import Header from '../../components/header/header';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute } from '../../const';
 
 function NotFoundPage() {
   return (
@@ -9,7 +9,7 @@ function NotFoundPage() {
       <Helmet>
         <title>6 Cities. Страница не найдена</title>
       </Helmet>
-      <Header authorizationStatus={AuthorizationStatus.NotAuth} />
+      <Header />
 
       <main className="page__main page__main--not-found">
         <section className="not-found container">

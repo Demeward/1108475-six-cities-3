@@ -1,11 +1,11 @@
 import { AppRoute, CITIES } from '../../const';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { changeCity } from '../../store/main/reducer';
+import { changeCity, getActiveCity } from '../../store/main/reducer';
 
 function CitiesTabs() {
   const dispatch = useAppDispatch();
-  const activeCity = useAppSelector((state) => state.activeCity);
+  const activeCity = useAppSelector(getActiveCity);
 
   const handleCityTabClick = (evt: React.MouseEvent<HTMLAnchorElement, MouseEvent>, city: string) => {
     if (city === activeCity) {
