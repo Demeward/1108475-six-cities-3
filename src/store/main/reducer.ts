@@ -1,11 +1,11 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AxiosInstance } from 'axios';
-import { APIRoute, CITIES, Sorting, ERROR_MESSAGE_TIMEOUT } from '../../const';
-import { createSelector } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AppRoute, CITIES, Sorting } from '../../const';
+import { createSelector, createAction } from '@reduxjs/toolkit';
 import { sortOffers } from '../../utils';
-import { AppDispatch } from '../../types/state';
 import { Offer } from '../../types/offer';
-import { store } from '..';
+import { fetchOffersAction } from './api-action';
+import { State } from '../../types/state';
+import { NameSpace } from '../../const';
 
 
 export type OffersState = {
@@ -28,38 +28,44 @@ const initialState: OffersState = {
 };
 
 export const mainSlice = createSlice({
-  name: 'main',
+  name: NameSpace.Main,
   initialState,
   reducers: {
-    fillOffers(state, action: PayloadAction<Offer[]>) {
-      state.offers = action.payload;
-    },
     changeCity(state, action: PayloadAction<string>) {
       state.activeCity = action.payload;
     },
     changeSorting(state, action: PayloadAction<Sorting>) {
       state.activeSorting = action.payload;
     },
-    setOffersLoading(state, action: PayloadAction<boolean>) {
-      state.areOffersLoading = action.payload;
-    },
-    setOffersLoadingFailed(state, action: PayloadAction<boolean>) {
-      state.isOffersLoadingFailed = action.payload;
-    },
     setError(state, action: PayloadAction<string | null>) {
       state.error = action.payload;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchOffersAction.pending, (state) => {
+        state.areOffersLoading = true;
+        state.isOffersLoadingFailed = false;
+      })
+      .addCase(fetchOffersAction.fulfilled, (state, action) => {
+        state.areOffersLoading = false;
+        state.offers = action.payload;
+      })
+      .addCase(fetchOffersAction.rejected, (state) => {
+        state.areOffersLoading = false;
+        state.isOffersLoadingFailed = true;
+      });
   }
 });
 
-export const { fillOffers, changeCity, changeSorting, setOffersLoading, setOffersLoadingFailed, setError } = mainSlice.actions;
+export const { changeCity, changeSorting, setError } = mainSlice.actions;
 
 
 export const selectFilteredOffers = createSelector(
   [
-    (state: OffersState) => state.offers,
-    (state: OffersState) => state.activeCity,
-    (state: OffersState) => state.activeSorting
+    (state: State) => state[NameSpace.Main].offers,
+    (state: State) => state[NameSpace.Main].activeCity,
+    (state: State) => state[NameSpace.Main].activeSorting
   ],
   (offers, activeCity, activeSorting) => {
     const filteredOffers = offers.filter((offer) => offer.city.name === activeCity);
@@ -67,31 +73,16 @@ export const selectFilteredOffers = createSelector(
   }
 );
 
-export const fetchOffersAction = createAsyncThunk<void, undefined, {
-  dispatch: AppDispatch;
-  state: OffersState;
-  extra: AxiosInstance;
-}>(
-  'data/fetchOffers',
-  async (_arg, { dispatch, extra: api }) => {
-    dispatch(setOffersLoading(true));
-    try {
-      const { data } = await api.get<Offer[]>(APIRoute.Offers);
-      dispatch(fillOffers(data));
-    } catch (error) {
-      dispatch(setOffersLoadingFailed(true));
-    } finally {
-      dispatch(setOffersLoading(false));
-    }
-  },
-);
+export const redirectToRoute = createAction<AppRoute>('main/redirectToRoute');
 
-export const clearErrorAction = createAsyncThunk(
-  'data/clearError',
-  () => {
-    setTimeout(
-      () => store.dispatch(setError(null)),
-      ERROR_MESSAGE_TIMEOUT,
-    );
-  },
-);
+export const getOffers = (state: State): Offer[] => state[NameSpace.Main].offers;
+
+export const getActiveCity = (state: State): string => state[NameSpace.Main].activeCity;
+
+export const getActiveSorting = (state: State): Sorting => state[NameSpace.Main].activeSorting;
+
+export const getOffersLoadingStatus = (state: State): boolean => state[NameSpace.Main].areOffersLoading;
+
+export const getOffersLoadingFailedStatus = (state: State): boolean => state[NameSpace.Main].isOffersLoadingFailed;
+
+export const getError = (state: State): string | null => state[NameSpace.Main].error;

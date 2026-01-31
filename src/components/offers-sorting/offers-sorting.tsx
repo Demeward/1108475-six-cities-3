@@ -2,11 +2,12 @@ import { Sorting } from '../../const';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { changeSorting } from '../../store/main/reducer';
+import { getActiveSorting } from '../../store/main/reducer';
 
 function OffersSorting() {
   const dispatch = useAppDispatch();
   const [isToggled, setToggle] = useState<boolean>(false);
-  const activeSorting = useAppSelector((state) => state.activeSorting);
+  const activeSorting = useAppSelector(getActiveSorting);
 
   return (
     <form className="places__sorting" action="#" method="get">

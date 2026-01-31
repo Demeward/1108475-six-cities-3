@@ -1,17 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus, OfferCardType } from '../../const';
 import { Offer } from '../../types/offer';
+import { getAuthorizationStatus } from '../../store/user/reducer';
+import { useAppSelector } from '../../store';
 
 
 type OfferCardProps = {
-  authorizationStatus: AuthorizationStatus;
   offer: Offer;
   offersType: OfferCardType;
   onActiveOfferChange?: (arg: Offer | null) => void;
 }
 
-function OfferCard({ authorizationStatus, offer, offersType, onActiveOfferChange }: OfferCardProps) {
+function OfferCard({ offer, offersType, onActiveOfferChange }: OfferCardProps) {
   const navigate = useNavigate();
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const { id, title, type, price, isFavorite, isPremium, rating, previewImage} = offer;
 
   const handleFavoriteButtonClick = () => {

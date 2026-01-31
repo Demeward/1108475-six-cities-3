@@ -9,15 +9,17 @@ import { Comment } from '../../types/comment';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAppSelector } from '../../store';
+import { getOffers } from '../../store/main/reducer';
+import { getAuthorizationStatus } from '../../store/user/reducer';
 
 type OfferPageProps = {
-  authorizationStatus: AuthorizationStatus;
   reviews: Comment[];
 }
 
-function OfferPage({authorizationStatus, reviews}: OfferPageProps) {
+function OfferPage({reviews}: OfferPageProps) {
   const navigate = useNavigate();
-  const offers = useAppSelector((state) => state.offers);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const offers = useAppSelector(getOffers);
   const { id: currentId } = useParams();
   const currentOffer: Offer | undefined = offers.find((offer) => currentId === offer.id);
 
@@ -41,7 +43,7 @@ function OfferPage({authorizationStatus, reviews}: OfferPageProps) {
       <Helmet>
         <title>6 Cities. Страница предложения</title>
       </Helmet>
-      <Header authorizationStatus={authorizationStatus}/>
+      <Header />
 
       <main className="page__main page__main--offer">
         <section className="offer">
@@ -122,7 +124,7 @@ function OfferPage({authorizationStatus, reviews}: OfferPageProps) {
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
-              <OffersList authorizationStatus={authorizationStatus} offers={nearOffers} offersType={OfferCardType.Near} />
+              <OffersList offers={nearOffers} offersType={OfferCardType.Near} />
             </div>
           </section>
         </div>

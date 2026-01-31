@@ -3,18 +3,15 @@ import OffersList from '../../components/offers-list/offers-list';
 import { AppRoute } from '../../const';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { AuthorizationStatus, OfferCardType } from '../../const';
+import { OfferCardType } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { changeCity } from '../../store/main/reducer';
+import { getOffers } from '../../store/main/reducer';
 
 
-type FavoritesPageProps = {
-  authorizationStatus: AuthorizationStatus;
-}
-
-function FavoritesPage({authorizationStatus}: FavoritesPageProps) {
+function FavoritesPage() {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector((state) => state.offers);
+  const offers = useAppSelector(getOffers);
   const favoritesOffers = offers.filter((offer) => offer.isFavorite);
   const favoritesCities = [...new Set(favoritesOffers.map((offer) => offer.city.name))];
 
@@ -23,7 +20,7 @@ function FavoritesPage({authorizationStatus}: FavoritesPageProps) {
       <Helmet>
         <title>6 Cities. Избранное</title>
       </Helmet>
-      <Header authorizationStatus={authorizationStatus}/>
+      <Header />
 
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
@@ -43,7 +40,7 @@ function FavoritesPage({authorizationStatus}: FavoritesPageProps) {
                         </div>
                       </div>
                       <div className="favorites__places">
-                        <OffersList authorizationStatus={authorizationStatus} offers={cityOffers} offersType={OfferCardType.Favorites} />
+                        <OffersList offers={cityOffers} offersType={OfferCardType.Favorites} />
                       </div>
                     </li>
                   );
