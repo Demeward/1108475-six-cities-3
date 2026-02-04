@@ -6,12 +6,12 @@ import { AppRoute, AuthorizationStatus, CITIES } from '../../const';
 import { getRandomCity } from '../../utils';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { changeCity } from '../../store/main/reducer';
-import { getAuthorizationStatus } from '../../store/user/reducer';
+import { selectAuthorizationStatus } from '../../store/user/reducer';
 import { loginAction } from '../../store/user/api-action';
 
 function LoginPage() {
   const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
 

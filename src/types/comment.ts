@@ -14,6 +14,9 @@ export type NewComment = {
   rating: number;
 }
 
+export interface Review extends NewComment {
+  offerId?: string;
+}
 
 export type User = {
   name: string;

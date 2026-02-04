@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { getUserData } from '../../store/user/reducer';
+import { selectUserData } from '../../store/user/reducer';
 import { logoutAction } from '../../store/user/api-action';
 
 function AuthorizedMenu() {
   const dispatch = useAppDispatch();
-  const profile = useAppSelector(getUserData);
+  const profile = useAppSelector(selectUserData);
 
   const handleLogoutClick = (evt: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     evt.preventDefault();

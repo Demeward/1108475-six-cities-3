@@ -8,6 +8,9 @@ export enum AppRoute {
 
 export enum APIRoute {
   Offers = '/offers',
+  Offer = '/offers/:id',
+  Comments = '/comments',
+  NearOffers = '/offers/:id/nearby',
   Login = '/login',
   Logout = '/logout'
 }
@@ -15,6 +18,7 @@ export enum APIRoute {
 export enum NameSpace {
   Main = 'MAIN',
   User = 'USER',
+  Offer = 'OFFER'
 }
 
 export enum AuthorizationStatus {

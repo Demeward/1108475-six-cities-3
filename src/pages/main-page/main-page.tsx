@@ -2,11 +2,11 @@ import Header from '../../components/header/header';
 import CitiesTabs from '../../components/cities-tabs/cities-tabs';
 import CitiesContent from '../../components/cities-content/cities-content';
 import { useAppSelector } from '../../store';
-import { getOffersLoadingFailedStatus } from '../../store/main/reducer';
+import { selectOffersLoadingFailedStatus } from '../../store/main/reducer';
 
 
 function MainPage() {
-  const isOffersLoadingFailed = useAppSelector(getOffersLoadingFailedStatus);
+  const isOffersLoadingFailed = useAppSelector(selectOffersLoadingFailedStatus);
 
 
   return (

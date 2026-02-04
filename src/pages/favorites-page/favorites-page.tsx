@@ -6,12 +6,12 @@ import { Helmet } from 'react-helmet-async';
 import { OfferCardType } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { changeCity } from '../../store/main/reducer';
-import { getOffers } from '../../store/main/reducer';
+import { selectOffers } from '../../store/main/reducer';
 
 
 function FavoritesPage() {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector(getOffers);
+  const offers = useAppSelector(selectOffers);
   const favoritesOffers = offers.filter((offer) => offer.isFavorite);
   const favoritesCities = [...new Set(favoritesOffers.map((offer) => offer.city.name))];
 

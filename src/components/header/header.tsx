@@ -3,11 +3,11 @@ import { AuthorizationStatus } from '../../const';
 import UnauthorizedMenu from '../unauthorized-menu/unauthorized-menu';
 import AuthorizedMenu from '../authorized-menu/authorized-menu';
 import { useAppSelector } from '../../store';
-import { getAuthorizationStatus } from '../../store/user/reducer';
+import { selectAuthorizationStatus } from '../../store/user/reducer';
 
 
 function Header() {
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   return (
     <header className="header">
