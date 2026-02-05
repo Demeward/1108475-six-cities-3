@@ -1,6 +1,6 @@
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { Navigate } from 'react-router-dom';
-import { getAuthorizationStatus, getAuthorizationChecked } from '../../store/user/reducer';
+import { selectAuthorizationStatus, selectAuthorizationChecked } from '../../store/user/reducer';
 import { useAppSelector } from '../../store';
 
 type PrivateRouteProps = {
@@ -8,8 +8,8 @@ type PrivateRouteProps = {
 };
 
 function PrivateRoute({children}: PrivateRouteProps) {
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
-  const isAuthorizationChecked = useAppSelector(getAuthorizationChecked);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+  const isAuthorizationChecked = useAppSelector(selectAuthorizationChecked);
 
   if (!isAuthorizationChecked) {
     return null;

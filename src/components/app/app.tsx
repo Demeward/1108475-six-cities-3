@@ -8,17 +8,16 @@ import HistoryRouter from '../history-route/history-route';
 import browserHistory from '../../browser-history';
 import Loader from '../loader/loader';
 import { AppRoute } from '../../const';
-import { reviews } from '../../mocks/reviews';
 import { Routes, Route, } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { useAppSelector } from '../../store';
-import { getOffersLoadingStatus } from '../../store/main/reducer';
-import { getAuthorizationChecked } from '../../store/user/reducer';
+import { selectOffersLoadingStatus } from '../../store/main/reducer';
+import { selectAuthorizationChecked } from '../../store/user/reducer';
 
 
 function App() {
-  const areOffersLoading = useAppSelector(getOffersLoadingStatus);
-  const isAuthorizationChecked = useAppSelector(getAuthorizationChecked);
+  const areOffersLoading = useAppSelector(selectOffersLoadingStatus);
+  const isAuthorizationChecked = useAppSelector(selectAuthorizationChecked);
 
   if (!isAuthorizationChecked && areOffersLoading) {
     return (
@@ -34,7 +33,7 @@ function App() {
             <Route index element={<MainPage />} />
             <Route path={AppRoute.Login} element={<LoginPage />}/>
             <Route path={AppRoute.Favorites} element={<PrivateRoute ><FavoritesPage /></PrivateRoute>} />
-            <Route path={AppRoute.Offer} element={<OfferPage reviews={reviews}/>} />
+            <Route path={AppRoute.Offer} element={<OfferPage/>} />
           </Route>
           <Route path={AppRoute.NotFound} element={<NotFoundPage />} />
         </Routes>

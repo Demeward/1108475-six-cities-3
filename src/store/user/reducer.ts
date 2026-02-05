@@ -50,8 +50,8 @@ export const userSlice = createSlice({
   }
 });
 
-export const getUserData = (state: State): UserData => state[NameSpace.User].userData;
+export const selectUserData = (state: State): UserData => state[NameSpace.User].userData;
 
-export const getAuthorizationStatus = (state: State): AuthorizationStatus => state[NameSpace.User].authorizationStatus;
+export const selectAuthorizationStatus = (state: State): AuthorizationStatus => state[NameSpace.User].authorizationStatus;
 
-export const getAuthorizationChecked = (state: State): boolean => state[NameSpace.User].authorizationStatus !== AuthorizationStatus.Unknown;
+export const selectAuthorizationChecked = (state: State): boolean => state[NameSpace.User].authorizationStatus !== AuthorizationStatus.Unknown;

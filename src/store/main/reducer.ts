@@ -75,14 +75,14 @@ export const selectFilteredOffers = createSelector(
 
 export const redirectToRoute = createAction<AppRoute>('main/redirectToRoute');
 
-export const getOffers = (state: State): Offer[] => state[NameSpace.Main].offers;
+export const selectOffers = (state: State): Offer[] => state[NameSpace.Main].offers;
 
-export const getActiveCity = (state: State): string => state[NameSpace.Main].activeCity;
+export const selectActiveCity = (state: State): string => state[NameSpace.Main].activeCity;
 
-export const getActiveSorting = (state: State): Sorting => state[NameSpace.Main].activeSorting;
+export const selectActiveSorting = (state: State): Sorting => state[NameSpace.Main].activeSorting;
 
-export const getOffersLoadingStatus = (state: State): boolean => state[NameSpace.Main].areOffersLoading;
+export const selectOffersLoadingStatus = (state: State): boolean => state[NameSpace.Main].areOffersLoading;
 
-export const getOffersLoadingFailedStatus = (state: State): boolean => state[NameSpace.Main].isOffersLoadingFailed;
+export const selectOffersLoadingFailedStatus = (state: State): boolean => state[NameSpace.Main].isOffersLoadingFailed;
 
-export const getError = (state: State): string | null => state[NameSpace.Main].error;
+export const selectError = (state: State): string | null => state[NameSpace.Main].error;

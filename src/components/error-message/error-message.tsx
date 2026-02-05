@@ -1,9 +1,9 @@
 import { useAppSelector } from '../../store';
 import './error-message.css';
-import { getError } from '../../store/main/reducer';
+import { selectError } from '../../store/main/reducer';
 
 function ErrorMessage() {
-  const error = useAppSelector(getError);
+  const error = useAppSelector(selectError);
 
   return (error)
     ? <div className='error-message'>{error}</div>

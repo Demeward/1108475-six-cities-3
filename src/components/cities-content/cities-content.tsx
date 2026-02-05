@@ -5,13 +5,13 @@ import { Offer } from '../../types/offer';
 import { OfferCardType } from '../../const';
 import { useState } from 'react';
 import { useAppSelector } from '../../store';
-import { selectFilteredOffers, getActiveCity } from '../../store/main/reducer';
+import { selectFilteredOffers, selectActiveCity } from '../../store/main/reducer';
 
 
 function CitiesContent() {
   const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
   const offers = useAppSelector(selectFilteredOffers);
-  const activeCity = useAppSelector(getActiveCity);
+  const activeCity = useAppSelector(selectActiveCity);
 
   const handleActiveOfferChange = (offer: Offer | null) => setActiveOffer(offer);
 

@@ -1,36 +1,52 @@
 import Header from '../../components/header/header';
 import Reviews from '../../components/reviews/reviews';
-import NotFoundPage from '../not-found-page/not-found-page';
-import OffersList from '../../components/offers-list/offers-list';
 import OffersMap from '../../components/offers-map/offers-map';
-import { AppRoute, AuthorizationStatus, OfferCardType } from '../../const';
-import { Offer } from '../../types/offer';
-import { Comment } from '../../types/comment';
+import NearOffers from '../../components/near-offers/near-offers';
+import Loader from '../../components/loader/loader';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useAppSelector } from '../../store';
-import { getOffers } from '../../store/main/reducer';
-import { getAuthorizationStatus } from '../../store/user/reducer';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { selectAuthorizationStatus } from '../../store/user/reducer';
+import { selectNearOffersBatch, selectOffer } from '../../store/offer/reducer';
+import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction } from '../../store/offer/api-action';
+import { redirectToRoute } from '../../store/main/reducer';
 
-type OfferPageProps = {
-  reviews: Comment[];
-}
 
-function OfferPage({reviews}: OfferPageProps) {
+function OfferPage() {
   const navigate = useNavigate();
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
-  const offers = useAppSelector(getOffers);
+  const dispatch = useAppDispatch();
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const { id: currentId } = useParams();
-  const currentOffer: Offer | undefined = offers.find((offer) => currentId === offer.id);
+  const currentOffer = useAppSelector(selectOffer);
+  const nearOffers = useAppSelector(selectNearOffersBatch);
 
-  if(!currentOffer) {
+  const isNotSameOffer = currentOffer?.id !== currentId;
+
+  useEffect(() => {
+    if (!currentOffer || isNotSameOffer) {
+      dispatch(fetchOfferAction(currentId as string))
+        .unwrap()
+        .then(() => {
+          dispatch(fetchReviewsAction(currentId as string));
+          dispatch(fetchNearOffersAction(currentId as string));
+        })
+        .catch((rejectedValue) => {
+          if (rejectedValue === 'NOT_FOUND') {
+            dispatch(redirectToRoute(AppRoute.NotFound));
+          }
+        });
+    }
+  }, [currentOffer, currentId, isNotSameOffer, dispatch]);
+
+  if (!currentOffer || isNotSameOffer) {
     return (
-      <NotFoundPage />
+      <Loader />
     );
   }
 
   const { title, type, price, isFavorite, isPremium, rating, description, bedrooms, goods, host, images, maxAdults } = currentOffer;
-  const nearOffers: Offer[] = offers.filter((offer) => offer.id !== currentOffer.id && offer.city.name === currentOffer.city.name);
 
   const handleFavoriteButtonClick = () => {
     if (authorizationStatus !== AuthorizationStatus.Auth) {
@@ -113,20 +129,15 @@ function OfferPage({reviews}: OfferPageProps) {
                   <p className="offer__text">{description}</p>
                 </div>
               </div>
-              <Reviews reviews={reviews} authorizationStatus={authorizationStatus}/>
+              <Reviews authorizationStatus={authorizationStatus}/>
             </div>
           </div>
           <section className="offer__map map">
-            <OffersMap offers={[...nearOffers, currentOffer]} activeOffer={currentOffer} />
+            {nearOffers.length ? <OffersMap offers={[...nearOffers, currentOffer]} activeOffer={currentOffer} /> : ''}
           </section>
         </section>
         <div className="container">
-          <section className="near-places places">
-            <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <div className="near-places__list places__list">
-              <OffersList offers={nearOffers} offersType={OfferCardType.Near} />
-            </div>
-          </section>
+          <NearOffers />
         </div>
       </main>
     </div>
