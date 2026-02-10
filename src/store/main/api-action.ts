@@ -4,7 +4,7 @@ import { State } from '../../types/state';
 import { APIRoute, ERROR_MESSAGE_TIMEOUT } from '../../const';
 import { store } from '..';
 import { Offer } from '../../types/offer';
-import { setError } from './reducer';
+import { setError } from './slice';
 
 
 export const fetchOffersAction = createAsyncThunk<Offer[], undefined, {

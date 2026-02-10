@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axios';
 import { getToken } from './services/token';
 import { store } from './store';
-import { setError } from './store/main/reducer';
+import { setError } from './store/main/slice';
 import { clearErrorAction } from './store/main/api-action';
 
 const BACKEND_URL = 'https://15.design.htmlacademy.pro/six-cities';

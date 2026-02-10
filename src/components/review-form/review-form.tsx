@@ -1,55 +1,38 @@
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { postReviewAction } from '../../store/offer/api-action';
-import { NewComment } from '../../types/comment';
-import { useState, FormEvent, useRef } from 'react';
-import { selectReviewPostingStatus } from '../../store/offer/reducer';
+import { useState, FormEvent, useCallback } from 'react';
+import { selectReviewPostingStatus } from '../../store/offer/slice';
 
 function ReviewForm() {
   const dispatch = useAppDispatch();
   const { id: offerId } = useParams();
-  const formRef = useRef<HTMLFormElement | null>(null);
+  const [rating, setRating] = useState<number>(0);
+  const [comment, setComment] = useState<string>('');
   const isReviewPosting = useAppSelector(selectReviewPostingStatus);
 
-  const [newComment, setNewComment] = useState<NewComment>({
-    comment: '',
-    rating: 0
-  });
+  const handleRatingChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => setRating(Number(evt.target.value)), []);
 
-  const handleRatingChange = (evt: React.ChangeEvent<HTMLInputElement>) => setNewComment(
-    {
-      ...newComment,
-      rating: Number(evt.target.value)
-    });
+  const handleCommentChange = useCallback((evt: React.ChangeEvent<HTMLTextAreaElement>) => setComment(evt.target.value), []);
 
-  const handleCommentChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => setNewComment(
-    {
-      ...newComment,
-      comment: evt.target.value
-    }
-  );
-
-  const handleReviewFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleReviewFormSubmit = useCallback((evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    dispatch(postReviewAction({ ...newComment, offerId }))
+    const form = evt.currentTarget;
+    dispatch(postReviewAction({ rating, comment, offerId }))
       .unwrap()
       .then(() => {
-        setNewComment(
-          {
-            comment: '',
-            rating: 0
-          }
-        );
-        formRef.current?.reset();
+        setRating(0);
+        setComment('');
+        form.reset();
       })
       .catch(() => {
       });
-  };
+  }, [dispatch, comment, rating, offerId]);
 
-  const isCommentValid = (newComment.comment.length >= 50 && newComment.comment.length <= 300) && newComment.rating !== 0;
+  const isCommentValid = (comment.length >= 50 && comment.length <= 300) && rating !== 0;
 
   return (
-    <form className="reviews__form form" action="#" method="post" onSubmit={handleReviewFormSubmit} ref={formRef}>
+    <form className="reviews__form form" action="#" method="post" onSubmit={handleReviewFormSubmit}>
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
         <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars" type="radio" onChange={handleRatingChange} disabled={isReviewPosting} />
@@ -88,7 +71,6 @@ function ReviewForm() {
         </label>
       </div>
       <textarea className="reviews__textarea form__textarea" id="review" name="review" placeholder="Tell how was your stay, what you like and what can be improved"
-        value={newComment.comment}
         onChange={handleCommentChange}
         disabled={isReviewPosting}
       >

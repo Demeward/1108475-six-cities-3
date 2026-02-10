@@ -3,7 +3,7 @@ import { AuthorizationStatus } from '../../const';
 import UnauthorizedMenu from '../unauthorized-menu/unauthorized-menu';
 import AuthorizedMenu from '../authorized-menu/authorized-menu';
 import { useAppSelector } from '../../store';
-import { selectAuthorizationStatus } from '../../store/user/reducer';
+import { selectAuthorizationStatus } from '../../store/user/slice';
 
 
 function Header() {

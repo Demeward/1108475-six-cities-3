@@ -27,7 +27,7 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN'
 }
 
-export enum OfferCardType {
+export enum OfferCardVariant {
   Cities = 'cities',
   Near = 'near-places',
   Favorites = 'favorites'
@@ -36,7 +36,7 @@ export enum OfferCardType {
 export enum Sorting {
   Popular = 'Popular',
   LowToHigh = 'Price: low to high',
-  HighToLow = 'Price: hight to low',
+  HighToLow = 'Price: high to low',
   TopRated = 'Top rated first'
 }
 

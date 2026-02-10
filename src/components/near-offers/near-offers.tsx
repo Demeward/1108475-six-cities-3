@@ -1,7 +1,7 @@
-import OffersList from '../offers-list/offers-list';
-import { OfferCardType } from '../../const';
+import OfferCard from '../offer-card/offer-card';
+import { OfferCardVariant } from '../../const';
 import { useAppSelector } from '../../store';
-import { selectLoadingStatus, selectNearOffersBatch } from '../../store/offer/reducer';
+import { selectLoadingStatus, selectNearOffersBatch } from '../../store/offer/slice';
 import Loader from '../loader/loader';
 
 
@@ -17,7 +17,7 @@ function NearOffers() {
     <section className="near-places places">
       <h2 className="near-places__title">Other places in the neighbourhood</h2>
       <div className="near-places__list places__list">
-        <OffersList offers={nearOffers} offersType={OfferCardType.Near} />
+        {nearOffers.map((offer) => <OfferCard key={offer.id} offer={offer} cardVariant={OfferCardVariant.Near} />)}
       </div>
     </section>
   );

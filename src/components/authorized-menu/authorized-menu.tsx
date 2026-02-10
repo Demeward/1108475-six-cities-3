@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { selectUserData } from '../../store/user/reducer';
+import { selectUserData } from '../../store/user/slice';
 import { logoutAction } from '../../store/user/api-action';
 
 function AuthorizedMenu() {

@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppRoute, CITIES, Sorting } from '../../const';
+import { AppRoute } from '../../const';
 import { createSelector, createAction } from '@reduxjs/toolkit';
-import { sortOffers } from '../../utils';
 import { Offer } from '../../types/offer';
 import { fetchOffersAction } from './api-action';
 import { State } from '../../types/state';
@@ -9,8 +8,6 @@ import { NameSpace } from '../../const';
 
 
 export type OffersState = {
-  activeCity: string;
-  activeSorting: Sorting;
   offers: Offer[];
   areOffersLoading: boolean;
   isOffersLoadingFailed: boolean;
@@ -19,8 +16,6 @@ export type OffersState = {
 
 
 const initialState: OffersState = {
-  activeCity: CITIES[0],
-  activeSorting: Sorting.Popular,
   offers: [],
   areOffersLoading: false,
   isOffersLoadingFailed: false,
@@ -31,12 +26,6 @@ export const mainSlice = createSlice({
   name: NameSpace.Main,
   initialState,
   reducers: {
-    changeCity(state, action: PayloadAction<string>) {
-      state.activeCity = action.payload;
-    },
-    changeSorting(state, action: PayloadAction<Sorting>) {
-      state.activeSorting = action.payload;
-    },
     setError(state, action: PayloadAction<string | null>) {
       state.error = action.payload;
     }
@@ -58,28 +47,20 @@ export const mainSlice = createSlice({
   }
 });
 
-export const { changeCity, changeSorting, setError } = mainSlice.actions;
+export const { setError } = mainSlice.actions;
 
 
 export const selectFilteredOffers = createSelector(
   [
     (state: State) => state[NameSpace.Main].offers,
-    (state: State) => state[NameSpace.Main].activeCity,
-    (state: State) => state[NameSpace.Main].activeSorting
+    (_state: State, activeCity: string) => activeCity,
   ],
-  (offers, activeCity, activeSorting) => {
-    const filteredOffers = offers.filter((offer) => offer.city.name === activeCity);
-    return sortOffers(filteredOffers, activeSorting);
-  }
+  (offers, activeCity) => offers.filter((offer) => offer.city.name === activeCity)
 );
 
 export const redirectToRoute = createAction<AppRoute>('main/redirectToRoute');
 
 export const selectOffers = (state: State): Offer[] => state[NameSpace.Main].offers;
-
-export const selectActiveCity = (state: State): string => state[NameSpace.Main].activeCity;
-
-export const selectActiveSorting = (state: State): Sorting => state[NameSpace.Main].activeSorting;
 
 export const selectOffersLoadingStatus = (state: State): boolean => state[NameSpace.Main].areOffersLoading;
 

@@ -3,7 +3,7 @@ import ReviewForm from '../review-form/review-form';
 import Loader from '../loader/loader';
 import { AuthorizationStatus } from '../../const';
 import { useAppSelector } from '../../store';
-import { selectLoadingStatus, selectReviews } from '../../store/offer/reducer';
+import { selectLoadingStatus, selectReviews } from '../../store/offer/slice';
 
 type ReviewsProps = {
   authorizationStatus: AuthorizationStatus;

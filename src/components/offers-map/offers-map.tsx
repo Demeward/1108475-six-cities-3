@@ -1,6 +1,6 @@
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, memo, FC} from 'react';
 import useMap from '../../hooks/useMap';
 import { Offer } from '../../types/offer';
 
@@ -21,7 +21,11 @@ type OffersMapProps = {
   activeOffer: Offer | null;
 }
 
-function OffersMap({offers, activeOffer}: OffersMapProps) {
+function equalProps(prevProps: OffersMapProps, nextProps: OffersMapProps) {
+  return nextProps.offers.every((offer, index) => offer.id === prevProps.offers[index].id) && prevProps.activeOffer?.id === nextProps.activeOffer?.id;
+}
+
+const OffersMap: FC<OffersMapProps> = memo(({offers, activeOffer}: OffersMapProps) => {
   const { location } = offers[0].city;
   const mapRef = useRef(null);
   const map = useMap(mapRef, location);
@@ -52,6 +56,8 @@ function OffersMap({offers, activeOffer}: OffersMapProps) {
   return (
     <div style={{height: '100%'}} ref={mapRef}></div>
   );
-}
+}, equalProps);
+
+OffersMap.displayName = 'OffersMap';
 
 export default OffersMap;
