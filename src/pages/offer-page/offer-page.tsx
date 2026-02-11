@@ -4,55 +4,74 @@ import OffersMap from '../../components/offers-map/offers-map';
 import NearOffers from '../../components/near-offers/near-offers';
 import Loader from '../../components/loader/loader';
 import { AppRoute, AuthorizationStatus } from '../../const';
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { selectAuthorizationStatus } from '../../store/user/reducer';
-import { selectNearOffersBatch, selectOffer } from '../../store/offer/reducer';
-import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction } from '../../store/offer/api-action';
-import { redirectToRoute } from '../../store/main/reducer';
+import { selectAuthorizationStatus } from '../../store/user/slice';
+import { selectLoadingFailedStatus, selectNearOffersBatch, selectOffer, updateFavoriteCurrentOffer } from '../../store/offer/slice';
+import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction, changeOfferFavoriteStatus } from '../../store/offer/api-action';
+import { redirectToRoute } from '../../store/main/slice';
 
 
 function OfferPage() {
   const navigate = useNavigate();
+  const location = useLocation().pathname;
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const { id: currentId } = useParams();
   const currentOffer = useAppSelector(selectOffer);
   const nearOffers = useAppSelector(selectNearOffersBatch);
-
-  const isNotSameOffer = currentOffer?.id !== currentId;
+  const isLoadingFailed = useAppSelector(selectLoadingFailedStatus);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!currentOffer || isNotSameOffer) {
-      dispatch(fetchOfferAction(currentId as string))
+    setLoading(true);
+    dispatch(fetchOfferAction(currentId as string))
+      .unwrap()
+      .then(() => {
+        dispatch(fetchReviewsAction(currentId as string));
+        dispatch(fetchNearOffersAction(currentId as string));
+      })
+      .catch((rejectedValue) => {
+        if (rejectedValue === 'NOT_FOUND') {
+          dispatch(redirectToRoute(AppRoute.NotFound));
+        }
+      })
+      .finally(() => setLoading(false));
+  }, [currentId, dispatch]);
+
+
+  const handleFavoriteButtonClick = useCallback(() => {
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login, { state: {from: location}});
+      return;
+    }
+    if(currentOffer) {
+      dispatch(changeOfferFavoriteStatus({ offerId: currentOffer.id, isFavorite: !currentOffer.isFavorite }))
         .unwrap()
-        .then(() => {
-          dispatch(fetchReviewsAction(currentId as string));
-          dispatch(fetchNearOffersAction(currentId as string));
+        .then((data) => {
+          dispatch(updateFavoriteCurrentOffer(data));
         })
-        .catch((rejectedValue) => {
-          if (rejectedValue === 'NOT_FOUND') {
-            dispatch(redirectToRoute(AppRoute.NotFound));
-          }
+        .catch(() => {
         });
     }
-  }, [currentOffer, currentId, isNotSameOffer, dispatch]);
+  }, [authorizationStatus, currentOffer, location, navigate, dispatch]);
 
-  if (!currentOffer || isNotSameOffer) {
+
+  if (isLoading || !currentOffer) {
     return (
       <Loader />
     );
   }
 
-  const { title, type, price, isFavorite, isPremium, rating, description, bedrooms, goods, host, images, maxAdults } = currentOffer;
+  if(isLoadingFailed.currentOffer) {
+    return (
+      <div className='container'><h2>Не удалось загрузить страницу предложения.</h2></div>
+    );
+  }
 
-  const handleFavoriteButtonClick = () => {
-    if (authorizationStatus !== AuthorizationStatus.Auth) {
-      navigate(AppRoute.Login);
-    }
-  };
+  const { title, type, price, isFavorite, isPremium, rating, description, bedrooms, goods, host, images, maxAdults } = currentOffer;
 
   return (
     <div className="page">
@@ -83,7 +102,7 @@ function OfferPage() {
                 : ''}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{title}</h1>
-                <button className={`offer__bookmark-button ${(isFavorite) ? 'offer__bookmark-button--active' : ''} button`} type="button" onClick={handleFavoriteButtonClick}>
+                <button className={`offer__bookmark-button ${(!isFavorite || authorizationStatus !== AuthorizationStatus.Auth) ? '' : 'offer__bookmark-button--active'} button`} type="button" onClick={handleFavoriteButtonClick}>
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark" />
                   </svg>

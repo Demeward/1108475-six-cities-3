@@ -11,6 +11,8 @@ export enum APIRoute {
   Offer = '/offers/:id',
   Comments = '/comments',
   NearOffers = '/offers/:id/nearby',
+  Favorites = '/favorite',
+  FavoriteStatus = '/favorite/:id/:status',
   Login = '/login',
   Logout = '/logout'
 }
@@ -27,7 +29,7 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN'
 }
 
-export enum OfferCardType {
+export enum OfferCardVariant {
   Cities = 'cities',
   Near = 'near-places',
   Favorites = 'favorites'
@@ -36,9 +38,14 @@ export enum OfferCardType {
 export enum Sorting {
   Popular = 'Popular',
   LowToHigh = 'Price: low to high',
-  HighToLow = 'Price: hight to low',
+  HighToLow = 'Price: high to low',
   TopRated = 'Top rated first'
 }
+
+export const FavoriteStatus = {
+  Favorite: '1',
+  NotFavorite: '0'
+} as const;
 
 export const ERROR_MESSAGE_TIMEOUT = 3000;
 

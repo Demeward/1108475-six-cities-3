@@ -1,6 +1,6 @@
 import { useAppSelector } from '../../store';
 import './error-message.css';
-import { selectError } from '../../store/main/reducer';
+import { selectError } from '../../store/main/slice';
 
 function ErrorMessage() {
   const error = useAppSelector(selectError);

@@ -11,15 +11,15 @@ import { AppRoute } from '../../const';
 import { Routes, Route, } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { useAppSelector } from '../../store';
-import { selectOffersLoadingStatus } from '../../store/main/reducer';
-import { selectAuthorizationChecked } from '../../store/user/reducer';
+import { selectOffersLoadingStatus } from '../../store/main/slice';
+import { selectAuthorizationChecked } from '../../store/user/slice';
 
 
 function App() {
-  const areOffersLoading = useAppSelector(selectOffersLoadingStatus);
+  const isLoading = useAppSelector(selectOffersLoadingStatus);
   const isAuthorizationChecked = useAppSelector(selectAuthorizationChecked);
 
-  if (!isAuthorizationChecked && areOffersLoading) {
+  if (!isAuthorizationChecked && isLoading.offers) {
     return (
       <Loader />
     );

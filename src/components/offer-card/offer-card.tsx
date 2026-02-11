@@ -1,58 +1,65 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus, OfferCardType } from '../../const';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AppRoute, AuthorizationStatus, OfferCardVariant } from '../../const';
 import { Offer } from '../../types/offer';
-import { selectAuthorizationStatus } from '../../store/user/reducer';
-import { useAppSelector } from '../../store';
+import { selectAuthorizationStatus } from '../../store/user/slice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { FC, memo, useCallback } from 'react';
+import { changeOfferFavoriteStatus } from '../../store/offer/api-action';
+import { updateFavoriteNearOffer } from '../../store/offer/slice';
 
 
 type OfferCardProps = {
   offer: Offer;
-  offersType: OfferCardType;
+  cardVariant: OfferCardVariant;
   onActiveOfferChange?: (arg: Offer | null) => void;
 }
 
-function OfferCard({ offer, offersType, onActiveOfferChange }: OfferCardProps) {
+const OfferCard: FC<OfferCardProps> = memo(({ offer, cardVariant, onActiveOfferChange }: OfferCardProps) => {
+  const dispatch = useAppDispatch();
+  const location = useLocation().pathname;
   const navigate = useNavigate();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const { id, title, type, price, isFavorite, isPremium, rating, previewImage} = offer;
 
-  const handleFavoriteButtonClick = () => {
+  const handleFavoriteButtonClick = useCallback(() => {
     if (authorizationStatus !== AuthorizationStatus.Auth) {
-      navigate(AppRoute.Login);
+      navigate(AppRoute.Login, { state: { from: location}});
+      return;
     }
-  };
+    dispatch(changeOfferFavoriteStatus({offerId: id, isFavorite: !isFavorite}))
+      .unwrap()
+      .then((data) => {
+        if (cardVariant === OfferCardVariant.Near) {
+          dispatch(updateFavoriteNearOffer(data));
+        }
+      })
+      .catch(() => {
+      });
+  }, [authorizationStatus, id, isFavorite, location, cardVariant, navigate, dispatch]);
 
   return (
-    <article className={`${offersType}__card place-card`}
-      onMouseEnter={() => {
-        if (onActiveOfferChange) {
-          onActiveOfferChange(offer);
-        }
-      }}
-      onMouseLeave={() => {
-        if (onActiveOfferChange) {
-          onActiveOfferChange(null);
-        }
-      }}
+    <article className={`${cardVariant}__card place-card`}
+      onMouseEnter={() => onActiveOfferChange?.(offer)}
+      onMouseLeave={() => onActiveOfferChange?.(null)}
     >
       {isPremium ?
         <div className="place-card__mark">
           <span>Premium</span>
         </div>
         : ''}
-      <div className={`${offersType}__image-wrapper place-card__image-wrapper`}>
+      <div className={`${cardVariant}__image-wrapper place-card__image-wrapper`}>
         <Link to={`/offer/${id}`}>
-          <img className="place-card__image" src={previewImage} width={offersType === OfferCardType.Favorites ? 150 : 260} height={offersType === OfferCardType.Favorites ? 110 : 200} alt="Place image" />
+          <img className="place-card__image" src={previewImage} width={cardVariant === OfferCardVariant.Favorites ? 150 : 260} height={cardVariant === OfferCardVariant.Favorites ? 110 : 200} alt="Place image" />
         </Link>
       </div>
-      <div className={`${(offersType) === OfferCardType.Favorites ? 'favorites__card-info' : ''} place-card__info`}>
+      <div className={`${(cardVariant) === OfferCardVariant.Favorites ? 'favorites__card-info' : ''} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">€{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           {
-            <button className={`place-card__bookmark-button ${(isFavorite) ? 'place-card__bookmark-button--active' : ''} button`} type="button" onClick={handleFavoriteButtonClick}>
+            <button className={`place-card__bookmark-button ${!isFavorite || authorizationStatus !== AuthorizationStatus.Auth ? '' : 'place-card__bookmark-button--active'} button`} type="button" onClick={handleFavoriteButtonClick}>
               <svg className="place-card__bookmark-icon" width={18} height={19}>
                 <use xlinkHref="#icon-bookmark" />
               </svg>
@@ -73,6 +80,8 @@ function OfferCard({ offer, offersType, onActiveOfferChange }: OfferCardProps) {
       </div>
     </article>
   );
-}
+});
+
+OfferCard.displayName = 'OfferCard';
 
 export default OfferCard;
