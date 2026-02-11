@@ -1,36 +1,49 @@
 import Logo from '../../components/logo/logo';
-import { Navigate, Link } from 'react-router-dom';
-import { FormEvent, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { FormEvent, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { AppRoute, AuthorizationStatus, CITIES } from '../../const';
+import { AppRoute, AuthorizationStatus, CITIES, Sorting } from '../../const';
 import { getRandomCity } from '../../utils';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { changeCity } from '../../store/main/reducer';
-import { selectAuthorizationStatus } from '../../store/user/reducer';
+import { selectAuthorizationStatus } from '../../store/user/slice';
 import { loginAction } from '../../store/user/api-action';
 
+type LocationState = { from: AppRoute }
 function LoginPage() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const locationState = useLocation()?.state as LocationState;
+  const fromLocationRef = useRef<AppRoute>(locationState?.from);
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
-  const loginRef = useRef<HTMLInputElement | null>(null);
-  const passwordRef = useRef<HTMLInputElement | null>(null);
 
-  if (authorizationStatus === AuthorizationStatus.Auth) {
-    return <Navigate to={AppRoute.Main} />;
-  }
-
-  const randomCity: string = getRandomCity(CITIES);
-
-  const handleLoginSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleLoginSubmit = useCallback((evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
-    if (loginRef.current && passwordRef.current) {
-      dispatch(loginAction({
-        login: loginRef.current.value,
-        password: passwordRef.current.value
-      }));
+    const form = new FormData(evt.currentTarget);
+    const email = form.get('email') as string;
+    const password = form.get('password') as string;
+
+    dispatch(loginAction({
+      login: email,
+      password: password
+    }))
+      .unwrap()
+      .then(() => navigate(fromLocationRef.current))
+      .catch(() => {
+      });
+  }, [dispatch, navigate]);
+
+  useEffect(() => {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      navigate(AppRoute.Main);
     }
-  };
+  });
+
+  const randomCity: string = useMemo(() => getRandomCity(CITIES), []);
+
+  if (authorizationStatus === AuthorizationStatus.Auth) {
+    return null;
+  }
 
   return (
     <div className="page page--gray page--login">
@@ -54,18 +67,18 @@ function LoginPage() {
             <form className="login__form form" action="#" method="post" onSubmit={handleLoginSubmit}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input className="login__input form__input" type="email" name="email" placeholder="Email" ref={loginRef}/>
+                <input className="login__input form__input" type="email" name="email" placeholder="Email" />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
-                <input className="login__input form__input" type="password" name="password" placeholder="Password" ref={passwordRef}/>
+                <input className="login__input form__input" type="password" name="password" placeholder="Password" />
               </div>
               <button className="login__submit form__submit button" type="submit">Sign in</button>
             </form>
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link className="locations__item-link" to={{ pathname: AppRoute.Main, search: `?city=${randomCity}` }} onClick={() => dispatch(changeCity(randomCity))}>
+              <Link className="locations__item-link" to={{ pathname: AppRoute.Main, search: `?city=${randomCity}&sorting=${Sorting.Popular}` }}>
                 <span>{randomCity}</span>
               </Link>
             </div>

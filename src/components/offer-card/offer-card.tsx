@@ -1,51 +1,44 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus, OfferCardType } from '../../const';
+import { AppRoute, AuthorizationStatus, OfferCardVariant } from '../../const';
 import { Offer } from '../../types/offer';
-import { selectAuthorizationStatus } from '../../store/user/reducer';
+import { selectAuthorizationStatus } from '../../store/user/slice';
 import { useAppSelector } from '../../store';
+import { FC, memo, useCallback } from 'react';
 
 
 type OfferCardProps = {
   offer: Offer;
-  offersType: OfferCardType;
+  cardVariant: OfferCardVariant;
   onActiveOfferChange?: (arg: Offer | null) => void;
 }
 
-function OfferCard({ offer, offersType, onActiveOfferChange }: OfferCardProps) {
+const OfferCard: FC<OfferCardProps> = memo(({ offer, cardVariant, onActiveOfferChange }: OfferCardProps) => {
   const navigate = useNavigate();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const { id, title, type, price, isFavorite, isPremium, rating, previewImage} = offer;
 
-  const handleFavoriteButtonClick = () => {
+  const handleFavoriteButtonClick = useCallback(() => {
     if (authorizationStatus !== AuthorizationStatus.Auth) {
       navigate(AppRoute.Login);
     }
-  };
+  }, [authorizationStatus, navigate]);
 
   return (
-    <article className={`${offersType}__card place-card`}
-      onMouseEnter={() => {
-        if (onActiveOfferChange) {
-          onActiveOfferChange(offer);
-        }
-      }}
-      onMouseLeave={() => {
-        if (onActiveOfferChange) {
-          onActiveOfferChange(null);
-        }
-      }}
+    <article className={`${cardVariant}__card place-card`}
+      onMouseEnter={() => onActiveOfferChange?.(offer)}
+      onMouseLeave={() => onActiveOfferChange?.(null)}
     >
       {isPremium ?
         <div className="place-card__mark">
           <span>Premium</span>
         </div>
         : ''}
-      <div className={`${offersType}__image-wrapper place-card__image-wrapper`}>
+      <div className={`${cardVariant}__image-wrapper place-card__image-wrapper`}>
         <Link to={`/offer/${id}`}>
-          <img className="place-card__image" src={previewImage} width={offersType === OfferCardType.Favorites ? 150 : 260} height={offersType === OfferCardType.Favorites ? 110 : 200} alt="Place image" />
+          <img className="place-card__image" src={previewImage} width={cardVariant === OfferCardVariant.Favorites ? 150 : 260} height={cardVariant === OfferCardVariant.Favorites ? 110 : 200} alt="Place image" />
         </Link>
       </div>
-      <div className={`${(offersType) === OfferCardType.Favorites ? 'favorites__card-info' : ''} place-card__info`}>
+      <div className={`${(cardVariant) === OfferCardVariant.Favorites ? 'favorites__card-info' : ''} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">€{price}</b>
@@ -73,6 +66,8 @@ function OfferCard({ offer, offersType, onActiveOfferChange }: OfferCardProps) {
       </div>
     </article>
   );
-}
+});
+
+OfferCard.displayName = 'OfferCard';
 
 export default OfferCard;

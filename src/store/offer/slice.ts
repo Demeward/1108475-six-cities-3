@@ -7,7 +7,7 @@ import { NameSpace } from '../../const';
 import { Comment } from '../../types/comment';
 
 type Loading = {
-  offer?: boolean;
+  offer: boolean;
   reviews: boolean;
   nearOffers: boolean;
 }
@@ -30,6 +30,7 @@ const initialState: OfferState = {
   reviews: [],
   nearOffers: [],
   isLoading: {
+    offer: false,
     reviews: false,
     nearOffers: false
   },
@@ -48,12 +49,15 @@ export const offerSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchOfferAction.pending, (state) => {
+        state.isLoading.offer = true;
         state.isLoadingFailed.offer = false;
       })
       .addCase(fetchOfferAction.fulfilled, (state, action) => {
+        state.isLoading.offer = false;
         state.offer = action.payload;
       })
       .addCase(fetchOfferAction.rejected, (state) => {
+        state.isLoading.offer = false;
         state.isLoadingFailed.offer = true;
       })
       .addCase(fetchReviewsAction.pending, (state) => {

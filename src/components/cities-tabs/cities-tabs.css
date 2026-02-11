@@ -1,0 +1,8 @@
+.tabs__item {
+  border: none;
+  cursor: pointer;
+}
+
+.tabs__item:not(.tabs__item--active) {
+  background: transparent;
+}

@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { mainSlice } from './main/reducer';
-import { userSlice } from './user/reducer';
-import { offerSlice } from './offer/reducer';
+import { mainSlice } from './main/slice';
+import { userSlice } from './user/slice';
+import { offerSlice } from './offer/slice';
 import { NameSpace } from '../const';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import type { State, AppDispatch } from '../types/state';

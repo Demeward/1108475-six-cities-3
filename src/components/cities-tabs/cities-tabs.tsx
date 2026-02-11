@@ -1,19 +1,14 @@
-import { AppRoute, CITIES } from '../../const';
-import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { changeCity, selectActiveCity } from '../../store/main/reducer';
+import { CITIES, Sorting } from '../../const';
+import './cities-tabs.css';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
 
 function CitiesTabs() {
-  const dispatch = useAppDispatch();
-  const activeCity = useAppSelector(selectActiveCity);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  const handleCityTabClick = (evt: React.MouseEvent<HTMLAnchorElement, MouseEvent>, city: string) => {
-    if (city === activeCity) {
-      evt.preventDefault();
-    } else {
-      dispatch(changeCity(city));
-    }
-  };
+  const activeCity = searchParams.get('city') ?? CITIES[0];
+  const activeSorting = searchParams.get('sorting') as Sorting ?? Sorting.Popular;
 
   return (
     <div className="tabs">
@@ -22,13 +17,17 @@ function CitiesTabs() {
           {
             CITIES.map((city) => (
               <li key={city} className="locations__item">
-                <Link
-                  to={{pathname: AppRoute.Main, search: `?city=${city}`}}
+                <button
+                  type='button'
                   className={`locations__item-link tabs__item ${city === activeCity ? 'tabs__item--active' : ''}`}
-                  onClick={(evt) => handleCityTabClick(evt, city)}
+                  onClick={() => {
+                    if (city !== activeCity) {
+                      navigate(`?city=${city}&sorting=${activeSorting}`);
+                    }
+                  }}
                 >
                   <span>{city}</span>
-                </Link>
+                </button>
               </li>
             ))
           }

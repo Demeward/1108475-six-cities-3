@@ -1,6 +1,6 @@
 import { AppRoute, AuthorizationStatus } from '../../const';
-import { Navigate } from 'react-router-dom';
-import { selectAuthorizationStatus, selectAuthorizationChecked } from '../../store/user/reducer';
+import { Navigate, useLocation } from 'react-router-dom';
+import { selectAuthorizationStatus, selectAuthorizationChecked } from '../../store/user/slice';
 import { useAppSelector } from '../../store';
 
 type PrivateRouteProps = {
@@ -8,6 +8,7 @@ type PrivateRouteProps = {
 };
 
 function PrivateRoute({children}: PrivateRouteProps) {
+  const location = useLocation();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const isAuthorizationChecked = useAppSelector(selectAuthorizationChecked);
 
@@ -18,7 +19,7 @@ function PrivateRoute({children}: PrivateRouteProps) {
   return (
     authorizationStatus === AuthorizationStatus.Auth
       ? children
-      : <Navigate to={AppRoute.Login} />
+      : <Navigate to={AppRoute.Login} state={{from: location.pathname}}/>
   );
 }
 

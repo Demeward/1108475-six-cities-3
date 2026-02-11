@@ -1,32 +1,26 @@
-import OffersSorting from '../offers-sorting/offers-sorting';
-import OffersList from '../offers-list/offers-list';
+import CitiesOffers from '../cities-offers/cities-offers';
 import OffersMap from '../offers-map/offers-map';
 import { Offer } from '../../types/offer';
-import { OfferCardType } from '../../const';
-import { useState } from 'react';
+import { CITIES } from '../../const';
+import { useState, useCallback } from 'react';
 import { useAppSelector } from '../../store';
-import { selectFilteredOffers, selectActiveCity } from '../../store/main/reducer';
+import { selectFilteredOffers } from '../../store/main/slice';
+import { useSearchParams } from 'react-router-dom';
 
 
 function CitiesContent() {
+  const [searchParams] = useSearchParams();
   const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
-  const offers = useAppSelector(selectFilteredOffers);
-  const activeCity = useAppSelector(selectActiveCity);
+  const activeCity = searchParams.get('city') ?? CITIES[0];
+  const offers = useAppSelector((state) => selectFilteredOffers(state, activeCity));
 
-  const handleActiveOfferChange = (offer: Offer | null) => setActiveOffer(offer);
+  const handleActiveOfferChange = useCallback((offer: Offer | null) => setActiveOffer(offer), []);
 
 
   return (
     <div className="cities">
       <div className="cities__places-container container">
-        <section className="cities__places places">
-          <h2 className="visually-hidden">Places</h2>
-          <b className="places__found">{offers.length} places to stay in {activeCity}</b>
-          <OffersSorting />
-          <div className="cities__places-list places__list tabs__content">
-            <OffersList offers={offers} offersType={OfferCardType.Cities} onActiveOfferChange={handleActiveOfferChange}/>
-          </div>
-        </section>
+        <CitiesOffers filteredOffers={offers} activeCity={activeCity} onActiveOfferChange={handleActiveOfferChange}/>
         <div className="cities__right-section">
           <section className="cities__map map">
             {offers.length ? <OffersMap offers={offers} activeOffer={activeOffer} /> : ''}
