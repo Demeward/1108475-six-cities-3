@@ -5,17 +5,18 @@ import NearOffers from '../../components/near-offers/near-offers';
 import Loader from '../../components/loader/loader';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { selectAuthorizationStatus } from '../../store/user/slice';
-import { selectLoadingFailedStatus, selectNearOffersBatch, selectOffer } from '../../store/offer/slice';
-import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction } from '../../store/offer/api-action';
+import { selectLoadingFailedStatus, selectNearOffersBatch, selectOffer, updateFavoriteCurrentOffer } from '../../store/offer/slice';
+import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction, changeOfferFavoriteStatus } from '../../store/offer/api-action';
 import { redirectToRoute } from '../../store/main/slice';
 
 
 function OfferPage() {
   const navigate = useNavigate();
+  const location = useLocation().pathname;
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const { id: currentId } = useParams();
@@ -43,9 +44,19 @@ function OfferPage() {
 
   const handleFavoriteButtonClick = useCallback(() => {
     if (authorizationStatus !== AuthorizationStatus.Auth) {
-      navigate(AppRoute.Login);
+      navigate(AppRoute.Login, { state: {from: location}});
+      return;
     }
-  }, [authorizationStatus, navigate]);
+    if(currentOffer) {
+      dispatch(changeOfferFavoriteStatus({ offerId: currentOffer.id, isFavorite: !currentOffer.isFavorite }))
+        .unwrap()
+        .then((data) => {
+          dispatch(updateFavoriteCurrentOffer(data));
+        })
+        .catch(() => {
+        });
+    }
+  }, [authorizationStatus, currentOffer, location, navigate, dispatch]);
 
 
   if (isLoading || !currentOffer) {
@@ -54,7 +65,7 @@ function OfferPage() {
     );
   }
 
-  if(isLoadingFailed.offer) {
+  if(isLoadingFailed.currentOffer) {
     return (
       <div className='container'><h2>Не удалось загрузить страницу предложения.</h2></div>
     );
@@ -91,7 +102,7 @@ function OfferPage() {
                 : ''}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{title}</h1>
-                <button className={`offer__bookmark-button ${(isFavorite) ? 'offer__bookmark-button--active' : ''} button`} type="button" onClick={handleFavoriteButtonClick}>
+                <button className={`offer__bookmark-button ${(!isFavorite || authorizationStatus !== AuthorizationStatus.Auth) ? '' : 'offer__bookmark-button--active'} button`} type="button" onClick={handleFavoriteButtonClick}>
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark" />
                   </svg>

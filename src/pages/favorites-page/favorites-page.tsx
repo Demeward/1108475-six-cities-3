@@ -4,14 +4,41 @@ import { AppRoute, Sorting } from '../../const';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { OfferCardVariant } from '../../const';
-import { useAppSelector } from '../../store';
-import { selectOffers } from '../../store/main/slice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { selectFavoriteOffers, selectCitiesFavoriteOffers, selectOffersLoadingFailedStatus, selectOffersLoadingStatus } from '../../store/main/slice';
+import { useEffect } from 'react';
+import { fetchFavoriteOffersAction } from '../../store/main/api-action';
+import Loader from '../../components/loader/loader';
+import FavoritesEmptyPage from '../favorites-empty-page/favorites-empty-page';
 
 
 function FavoritesPage() {
-  const offers = useAppSelector(selectOffers);
-  const favoritesOffers = offers.filter((offer) => offer.isFavorite);
-  const favoritesCities = [...new Set(favoritesOffers.map((offer) => offer.city.name))];
+  const dispatch = useAppDispatch();
+  const offers = useAppSelector(selectFavoriteOffers);
+  const citiesFavoriteOffers = useAppSelector(selectCitiesFavoriteOffers);
+  const isLoading = useAppSelector(selectOffersLoadingStatus);
+  const isLoadingFailed = useAppSelector(selectOffersLoadingFailedStatus);
+
+  useEffect(() => {
+    dispatch(fetchFavoriteOffersAction());
+  }, [dispatch]);
+
+  if(isLoading.favoriteOffers) {
+    return <Loader />;
+  }
+
+  if (isLoadingFailed.favoriteOffers) {
+    return (
+      <div className="page">
+        <Header />
+        <div className='container'><h2>Не удалось загрузить избранные предложения.</h2></div>
+      </div>
+    );
+  }
+
+  if(!offers.length) {
+    return <FavoritesEmptyPage />;
+  }
 
   return (
     <div className="page">
@@ -26,23 +53,19 @@ function FavoritesPage() {
             <h1 className="favorites__title">Saved listing</h1>
             <ul className="favorites__list">
               {
-                favoritesCities.map((city) => {
-                  const cityOffers = favoritesOffers.filter((offer) => offer.city.name === city);
-                  return (
-                    <li className="favorites__locations-items" key={city}>
-                      <div className="favorites__locations locations locations--current">
-                        <div className="locations__item">
-                          <Link className="locations__item-link" to={{ pathname: AppRoute.Main, search: `?city=${city}&sorting=${Sorting.Popular}` }}>
-                            <span>{city}</span>
-                          </Link>
-                        </div>
+                citiesFavoriteOffers.map((cityOffers) => (
+                  <li className="favorites__locations-items" key={cityOffers[0].city.name}>
+                    <div className="favorites__locations locations locations--current">
+                      <div className="locations__item">
+                        <Link className="locations__item-link" to={{ pathname: AppRoute.Main, search: `?city=${cityOffers[0].city.name}&sorting=${Sorting.Popular}` }}>
+                          <span>{cityOffers[0].city.name}</span>
+                        </Link>
                       </div>
-                      <div className="favorites__places">
-                        {cityOffers.map((offer) => <OfferCard key={offer.id} offer={offer} cardVariant={OfferCardVariant.Favorites} />)}
-                      </div>
-                    </li>
-                  );
-                })
+                    </div>
+                    <div className="favorites__places">
+                      {cityOffers.map((offer) => <OfferCard key={offer.id} offer={offer} cardVariant={OfferCardVariant.Favorites} />)}
+                    </div>
+                  </li>))
               }
             </ul>
           </section>

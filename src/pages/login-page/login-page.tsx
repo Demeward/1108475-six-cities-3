@@ -7,6 +7,8 @@ import { getRandomCity } from '../../utils';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { selectAuthorizationStatus } from '../../store/user/slice';
 import { loginAction } from '../../store/user/api-action';
+import { fetchOffersAction } from '../../store/main/api-action';
+import { redirectToRoute } from '../../store/main/slice';
 
 type LocationState = { from: AppRoute }
 function LoginPage() {
@@ -28,18 +30,23 @@ function LoginPage() {
       password: password
     }))
       .unwrap()
-      .then(() => navigate(fromLocationRef.current))
+      .then(() => {
+        dispatch(redirectToRoute(fromLocationRef.current));
+        if(fromLocationRef.current !== AppRoute.Favorites) {
+          dispatch(fetchOffersAction());
+        }
+      })
       .catch(() => {
       });
-  }, [dispatch, navigate]);
+  }, [dispatch]);
+
+  const randomCity: string = useMemo(() => getRandomCity(CITIES), []);
 
   useEffect(() => {
     if (authorizationStatus === AuthorizationStatus.Auth) {
       navigate(AppRoute.Main);
     }
-  });
-
-  const randomCity: string = useMemo(() => getRandomCity(CITIES), []);
+  }, [authorizationStatus, navigate]);
 
   if (authorizationStatus === AuthorizationStatus.Auth) {
     return null;

@@ -2,12 +2,13 @@ import { CITIES, Sorting } from '../../const';
 import './cities-tabs.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+type CitiesTabsProps = {
+  activeCity: string;
+}
 
-function CitiesTabs() {
+function CitiesTabs({activeCity}: CitiesTabsProps) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  const activeCity = searchParams.get('city') ?? CITIES[0];
   const activeSorting = searchParams.get('sorting') as Sorting ?? Sorting.Popular;
 
   return (

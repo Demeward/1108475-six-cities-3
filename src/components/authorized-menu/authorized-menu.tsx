@@ -3,10 +3,12 @@ import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { selectUserData } from '../../store/user/slice';
 import { logoutAction } from '../../store/user/api-action';
+import { selectFavoriteOffers } from '../../store/main/slice';
 
 function AuthorizedMenu() {
   const dispatch = useAppDispatch();
   const profile = useAppSelector(selectUserData);
+  const favoriteOffers = useAppSelector(selectFavoriteOffers);
 
   const handleLogoutClick = (evt: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     evt.preventDefault();
@@ -22,7 +24,7 @@ function AuthorizedMenu() {
             <img className="header__avatar user__avatar" src={profile.avatarUrl} width="54" height="54" alt="User avatar" />
           </div>
           <span className="header__user-name user__name">{profile.email}</span>
-          <span className="header__favorite-count">3</span>
+          <span className="header__favorite-count">{favoriteOffers.length}</span>
         </Link>
       </li>
       <li className="header__nav-item">

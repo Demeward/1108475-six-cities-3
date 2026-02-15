@@ -11,6 +11,8 @@ export enum APIRoute {
   Offer = '/offers/:id',
   Comments = '/comments',
   NearOffers = '/offers/:id/nearby',
+  Favorites = '/favorite',
+  FavoriteStatus = '/favorite/:id/:status',
   Login = '/login',
   Logout = '/logout'
 }
@@ -39,6 +41,11 @@ export enum Sorting {
   HighToLow = 'Price: high to low',
   TopRated = 'Top rated first'
 }
+
+export const FavoriteStatus = {
+  Favorite: '1',
+  NotFavorite: '0'
+} as const;
 
 export const ERROR_MESSAGE_TIMEOUT = 3000;
 

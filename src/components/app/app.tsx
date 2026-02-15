@@ -16,10 +16,10 @@ import { selectAuthorizationChecked } from '../../store/user/slice';
 
 
 function App() {
-  const areOffersLoading = useAppSelector(selectOffersLoadingStatus);
+  const isLoading = useAppSelector(selectOffersLoadingStatus);
   const isAuthorizationChecked = useAppSelector(selectAuthorizationChecked);
 
-  if (!isAuthorizationChecked && areOffersLoading) {
+  if (!isAuthorizationChecked && isLoading.offers) {
     return (
       <Loader />
     );

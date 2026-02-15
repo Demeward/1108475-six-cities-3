@@ -1,11 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { State } from '../../types/state';
-import { APIRoute } from '../../const';
+import { AppDispatch, State } from '../../types/state';
+import { APIRoute, FavoriteStatus } from '../../const';
 import { Offer } from '../../types/offer';
 import { generatePath } from 'react-router-dom';
 import { Comment, Review } from '../../types/comment';
 import { AxiosError } from 'axios';
+import { updateFavoriteOffer } from '../main/slice';
 
 
 export const fetchOfferAction = createAsyncThunk<Offer, string, {
@@ -56,6 +57,25 @@ export const postReviewAction = createAsyncThunk<Comment, Review, {
   'data/postReview',
   async ({comment, rating, offerId}, { extra: api }) => {
     const { data } = await api.post<Comment>(`${APIRoute.Comments}/${offerId}`, {comment, rating});
+    return data;
+  },
+);
+
+type FavoriteData = {
+  offerId: string;
+  isFavorite: boolean;
+}
+
+export const changeOfferFavoriteStatus = createAsyncThunk<Offer, FavoriteData, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/changeFavorite',
+  async ({ offerId, isFavorite }, { dispatch, extra: api }) => {
+    const status = isFavorite ? FavoriteStatus.Favorite : FavoriteStatus.NotFavorite;
+    const { data } = await api.post<Offer>(generatePath(APIRoute.FavoriteStatus, { id: offerId, status }));
+    dispatch(updateFavoriteOffer(data));
     return data;
   },
 );

@@ -1,9 +1,11 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus, OfferCardVariant } from '../../const';
 import { Offer } from '../../types/offer';
 import { selectAuthorizationStatus } from '../../store/user/slice';
-import { useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { FC, memo, useCallback } from 'react';
+import { changeOfferFavoriteStatus } from '../../store/offer/api-action';
+import { updateFavoriteNearOffer } from '../../store/offer/slice';
 
 
 type OfferCardProps = {
@@ -13,15 +15,27 @@ type OfferCardProps = {
 }
 
 const OfferCard: FC<OfferCardProps> = memo(({ offer, cardVariant, onActiveOfferChange }: OfferCardProps) => {
+  const dispatch = useAppDispatch();
+  const location = useLocation().pathname;
   const navigate = useNavigate();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const { id, title, type, price, isFavorite, isPremium, rating, previewImage} = offer;
 
   const handleFavoriteButtonClick = useCallback(() => {
     if (authorizationStatus !== AuthorizationStatus.Auth) {
-      navigate(AppRoute.Login);
+      navigate(AppRoute.Login, { state: { from: location}});
+      return;
     }
-  }, [authorizationStatus, navigate]);
+    dispatch(changeOfferFavoriteStatus({offerId: id, isFavorite: !isFavorite}))
+      .unwrap()
+      .then((data) => {
+        if (cardVariant === OfferCardVariant.Near) {
+          dispatch(updateFavoriteNearOffer(data));
+        }
+      })
+      .catch(() => {
+      });
+  }, [authorizationStatus, id, isFavorite, location, cardVariant, navigate, dispatch]);
 
   return (
     <article className={`${cardVariant}__card place-card`}
@@ -45,7 +59,7 @@ const OfferCard: FC<OfferCardProps> = memo(({ offer, cardVariant, onActiveOfferC
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           {
-            <button className={`place-card__bookmark-button ${(isFavorite) ? 'place-card__bookmark-button--active' : ''} button`} type="button" onClick={handleFavoriteButtonClick}>
+            <button className={`place-card__bookmark-button ${!isFavorite || authorizationStatus !== AuthorizationStatus.Auth ? '' : 'place-card__bookmark-button--active'} button`} type="button" onClick={handleFavoriteButtonClick}>
               <svg className="place-card__bookmark-icon" width={18} height={19}>
                 <use xlinkHref="#icon-bookmark" />
               </svg>

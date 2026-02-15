@@ -1,13 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { State, AppDispatch } from '../../types/state';
+import { State } from '../../types/state';
 import { APIRoute, } from '../../const';
 import { CredentialsData, UserData } from '../../types/auth';
 import { saveToken, dropToken } from '../../services/token';
 
 
 export const checkAuthorizationAction = createAsyncThunk<UserData, undefined, {
-  dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
@@ -31,7 +30,6 @@ export const loginAction = createAsyncThunk<UserData, CredentialsData, {
 );
 
 export const logoutAction = createAsyncThunk<void, undefined, {
-  dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
