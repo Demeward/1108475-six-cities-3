@@ -1,9 +1,12 @@
 import Review from '../review/review';
 import ReviewForm from '../review-form/review-form';
 import Loader from '../loader/loader';
-import { AuthorizationStatus } from '../../const';
+import { AuthorizationStatus, RequestStatus } from '../../const';
 import { useAppSelector } from '../../store';
-import { selectLoadingStatus, selectReviews } from '../../store/offer/slice';
+import { selectReviewsLoadingStatus, selectReviews } from '../../store/offer/slice';
+import { useMemo } from 'react';
+
+const MAX_REVIEWS_LENGTH = 10;
 
 type ReviewsProps = {
   authorizationStatus: AuthorizationStatus;
@@ -12,11 +15,19 @@ type ReviewsProps = {
 
 function Reviews({authorizationStatus}: ReviewsProps) {
   const reviews = useAppSelector(selectReviews);
-  const isLoading = useAppSelector(selectLoadingStatus);
+  const reviewsLoadingStatus = useAppSelector(selectReviewsLoadingStatus);
 
-  if (isLoading.reviews) {
+  const sortedReviews = useMemo(() => reviews.toSorted((a, b): number => Date.parse(b.date) - Date.parse(a.date)), [reviews]);
+
+  if (reviewsLoadingStatus === RequestStatus.Loading) {
     return (
       <Loader />
+    );
+  }
+
+  if (reviewsLoadingStatus === RequestStatus.Error) {
+    return (
+      <h2 className="reviews__title">Не удалось загрузить отзывы</h2>
     );
   }
 
@@ -26,7 +37,13 @@ function Reviews({authorizationStatus}: ReviewsProps) {
       {reviews.length ?
         <ul className="reviews__list">
           {
-            reviews.toSorted((a, b): number => Date.parse(b.date) - Date.parse(a.date)).map((review) => <Review key={review.id} review={review} />)
+            sortedReviews.map((review, index) => {
+              if (index < MAX_REVIEWS_LENGTH) {
+                return (
+                  <Review key={review.id} review={review} />
+                );
+              }
+            })
           }
         </ul>
         : ''}

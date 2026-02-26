@@ -10,14 +10,17 @@ export type Offer = {
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
+  previewImage?: string;
+};
+
+export interface OfferFull extends Offer {
   description: string;
   bedrooms: number;
   goods: string[];
   host: Host;
-  previewImage: string;
   images: string[];
   maxAdults: number;
-};
+}
 
 export type City = {
   name: string;

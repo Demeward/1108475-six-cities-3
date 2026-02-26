@@ -4,10 +4,8 @@ import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import OfferPage from '../../pages/offer-page/offer-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import PrivateRoute from '../private-route/private-route';
-import HistoryRouter from '../history-route/history-route';
-import browserHistory from '../../browser-history';
 import Loader from '../loader/loader';
-import { AppRoute } from '../../const';
+import { AppRoute, RequestStatus } from '../../const';
 import { Routes, Route, } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { useAppSelector } from '../../store';
@@ -16,10 +14,10 @@ import { selectAuthorizationChecked } from '../../store/user/slice';
 
 
 function App() {
-  const isLoading = useAppSelector(selectOffersLoadingStatus);
+  const offersStatus = useAppSelector(selectOffersLoadingStatus);
   const isAuthorizationChecked = useAppSelector(selectAuthorizationChecked);
 
-  if (!isAuthorizationChecked && isLoading.offers) {
+  if (!isAuthorizationChecked && offersStatus === RequestStatus.Loading) {
     return (
       <Loader />
     );
@@ -27,17 +25,15 @@ function App() {
 
   return (
     <HelmetProvider>
-      <HistoryRouter history={browserHistory}>
-        <Routes>
-          <Route path={AppRoute.Main}>
-            <Route index element={<MainPage />} />
-            <Route path={AppRoute.Login} element={<LoginPage />}/>
-            <Route path={AppRoute.Favorites} element={<PrivateRoute ><FavoritesPage /></PrivateRoute>} />
-            <Route path={AppRoute.Offer} element={<OfferPage/>} />
-          </Route>
-          <Route path={AppRoute.NotFound} element={<NotFoundPage />} />
-        </Routes>
-      </HistoryRouter >
+      <Routes>
+        <Route path={AppRoute.Main}>
+          <Route index element={<MainPage />} />
+          <Route path={AppRoute.Login} element={<LoginPage />}/>
+          <Route path={AppRoute.Favorites} element={<PrivateRoute ><FavoritesPage /></PrivateRoute>} />
+          <Route path={AppRoute.Offer} element={<OfferPage/>} />
+        </Route>
+        <Route path={AppRoute.NotFound} element={<NotFoundPage />} />
+      </Routes>
     </HelmetProvider >
   );
 }

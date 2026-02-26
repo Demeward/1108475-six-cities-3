@@ -1,8 +1,16 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { postReviewAction } from '../../store/offer/api-action';
 import { useState, FormEvent, useCallback } from 'react';
 import { selectReviewPostingStatus } from '../../store/offer/slice';
+import { Rating, RequestStatus } from '../../const';
+import { toast } from 'react-toastify';
+
+const CommentLength = {
+  Min: 50,
+  Max: 300,
+} as const;
 
 function ReviewForm() {
   const dispatch = useAppDispatch();
@@ -25,61 +33,43 @@ function ReviewForm() {
         setComment('');
         form.reset();
       })
-      .catch(() => {
+      .catch((rejectedValue) => {
+        if (isReviewPosting === rejectedValue) {
+          toast.warn('Не удалось отправить комментарий');
+        }
       });
-  }, [dispatch, comment, rating, offerId]);
+  }, [dispatch, comment, rating, offerId, isReviewPosting]);
 
-  const isCommentValid = (comment.length >= 50 && comment.length <= 300) && rating !== 0;
+  const isCommentValid = (comment.trim().length >= CommentLength.Min && comment.trim().length <= CommentLength.Max) && rating !== 0;
 
   return (
     <form className="reviews__form form" action="#" method="post" onSubmit={handleReviewFormSubmit}>
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
-        <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars" type="radio" onChange={handleRatingChange} disabled={isReviewPosting} />
-        <label htmlFor="5-stars" className="reviews__rating-label form__rating-label" title="perfect">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star" />
-          </svg>
-        </label>
-
-        <input className="form__rating-input visually-hidden" name="rating" value="4" id="4-stars" type="radio" onChange={handleRatingChange} disabled={isReviewPosting} />
-        <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star" />
-          </svg>
-        </label>
-
-        <input className="form__rating-input visually-hidden" name="rating" value="3" id="3-stars" type="radio" onChange={handleRatingChange} disabled={isReviewPosting} />
-        <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star" />
-          </svg>
-        </label>
-
-        <input className="form__rating-input visually-hidden" name="rating" value="2" id="2-stars" type="radio" onChange={handleRatingChange} disabled={isReviewPosting} />
-        <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star" />
-          </svg>
-        </label>
-
-        <input className="form__rating-input visually-hidden" name="rating" value="1" id="1-star" type="radio" onChange={handleRatingChange} disabled={isReviewPosting} />
-        <label htmlFor="1-star" className="reviews__rating-label form__rating-label" title="terribly">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star" />
-          </svg>
-        </label>
+        {
+          Object.values(Rating).map(({name, value}) => (
+            <React.Fragment key={value}>
+              <input className="form__rating-input visually-hidden" name="rating" value={`${value}`} id={`${value}-stars`} type="radio" onChange={handleRatingChange} checked={rating === value} disabled={isReviewPosting === RequestStatus.Loading} />
+              <label htmlFor={`${value}-stars`} className="reviews__rating-label form__rating-label" title={name}>
+                <svg className="form__star-image" width="37" height="33">
+                  <use xlinkHref="#icon-star" />
+                </svg>
+              </label>
+            </React.Fragment>
+          ))
+        }
       </div>
       <textarea className="reviews__textarea form__textarea" id="review" name="review" placeholder="Tell how was your stay, what you like and what can be improved"
+        value={comment}
         onChange={handleCommentChange}
-        disabled={isReviewPosting}
+        disabled={isReviewPosting === RequestStatus.Loading}
       >
       </textarea>
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={!isCommentValid || isReviewPosting}>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={!isCommentValid || isReviewPosting === RequestStatus.Loading}>Submit</button>
       </div>
     </form>
   );

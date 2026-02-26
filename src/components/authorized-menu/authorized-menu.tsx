@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, AvatarSize } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { selectUserData } from '../../store/user/slice';
 import { logoutAction } from '../../store/user/api-action';
@@ -21,16 +21,16 @@ function AuthorizedMenu() {
       <li className="header__nav-item user">
         <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Favorites}>
           <div className="header__avatar-wrapper user__avatar-wrapper">
-            <img className="header__avatar user__avatar" src={profile.avatarUrl} width="54" height="54" alt="User avatar" />
+            <img className="header__avatar user__avatar" src={profile.avatarUrl} width={AvatarSize.User} height={AvatarSize.User} alt="User avatar" />
           </div>
           <span className="header__user-name user__name">{profile.email}</span>
           <span className="header__favorite-count">{favoriteOffers.length}</span>
         </Link>
       </li>
       <li className="header__nav-item">
-        <Link className="header__nav-link" to={AppRoute.Main} onClick={handleLogoutClick}>
+        <a className="header__nav-link" href='#' onClick={handleLogoutClick}>
           <span className="header__signout">Sign out</span>
-        </Link>
+        </a>
       </li>
     </>
   );
