@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 function FavoritesEmptyPage() {
 
   return (
-    <div className="page page--favorites-empty">
+    <div className="page page--favorites-empty" data-testid="favorites-page">
       <Helmet>
         <title>6 Cities. Избранное</title>
       </Helmet>

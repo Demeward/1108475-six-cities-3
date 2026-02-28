@@ -1,6 +1,6 @@
 import { Comment } from '../types/comment';
 
-const reviews: Comment[] = [
+const mockReviews: Comment[] = [
   {
     id: '1',
     comment: 'The deluxe room was a quite comfortable one with all the adequate facilities. The only thing that made me feel uncomfortable was the rude behavior of an impolite staff at the reception desk.',
@@ -47,4 +47,10 @@ const reviews: Comment[] = [
   },
 ];
 
-export {reviews};
+const mockNewReview = {
+  comment: 'Home is amazing. It`s like staying in a museum. The rooms, furnishings and artworks are incredible. The views of My Vesuvius',
+  rating: 4,
+  offerId: '1'
+};
+
+export { mockReviews, mockNewReview };

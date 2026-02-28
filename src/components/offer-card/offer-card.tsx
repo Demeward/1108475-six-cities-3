@@ -1,12 +1,23 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus, OfferCardVariant } from '../../const';
+import { AppRoute, AuthorizationStatus, OfferCardVariant, RequestStatus } from '../../const';
 import { Offer } from '../../types/offer';
 import { selectAuthorizationStatus } from '../../store/user/slice';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { FC, memo, useCallback } from 'react';
-import { changeOfferFavoriteStatus } from '../../store/offer/api-action';
+import { updateFavoriteStatusAction } from '../../store/offer/api-action';
 import { updateFavoriteNearOffer } from '../../store/offer/slice';
+import { toast } from 'react-toastify';
 
+const OfferCardSize = {
+  Default: {
+    Width: 260,
+    Height: 200
+  },
+  Favorite: {
+    Width: 150,
+    Height: 110
+  }
+};
 
 type OfferCardProps = {
   offer: Offer;
@@ -26,14 +37,17 @@ const OfferCard: FC<OfferCardProps> = memo(({ offer, cardVariant, onActiveOfferC
       navigate(AppRoute.Login, { state: { from: location}});
       return;
     }
-    dispatch(changeOfferFavoriteStatus({offerId: id, isFavorite: !isFavorite}))
+    dispatch(updateFavoriteStatusAction({offerId: id, isFavorite: !isFavorite}))
       .unwrap()
       .then((data) => {
         if (cardVariant === OfferCardVariant.Near) {
           dispatch(updateFavoriteNearOffer(data));
         }
       })
-      .catch(() => {
+      .catch((rejectedValue) => {
+        if(rejectedValue === RequestStatus.Error) {
+          toast.warn('Не удалось изменить статус избранного предложения');
+        }
       });
   }, [authorizationStatus, id, isFavorite, location, cardVariant, navigate, dispatch]);
 
@@ -49,7 +63,7 @@ const OfferCard: FC<OfferCardProps> = memo(({ offer, cardVariant, onActiveOfferC
         : ''}
       <div className={`${cardVariant}__image-wrapper place-card__image-wrapper`}>
         <Link to={`/offer/${id}`}>
-          <img className="place-card__image" src={previewImage} width={cardVariant === OfferCardVariant.Favorites ? 150 : 260} height={cardVariant === OfferCardVariant.Favorites ? 110 : 200} alt="Place image" />
+          <img className="place-card__image" src={previewImage} width={cardVariant === OfferCardVariant.Favorites ? OfferCardSize.Favorite.Width : OfferCardSize.Default.Width} height={cardVariant === OfferCardVariant.Favorites ? OfferCardSize.Favorite.Height : OfferCardSize.Default.Height} alt="Place image" />
         </Link>
       </div>
       <div className={`${(cardVariant) === OfferCardVariant.Favorites ? 'favorites__card-info' : ''} place-card__info`}>

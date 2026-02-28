@@ -1,33 +1,42 @@
 import Header from '../../components/header/header';
 import OfferCard from '../../components/offer-card/offer-card';
-import { AppRoute, Sorting } from '../../const';
+import { AppRoute, RequestStatus, Sorting } from '../../const';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { OfferCardVariant } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { selectFavoriteOffers, selectCitiesFavoriteOffers, selectOffersLoadingFailedStatus, selectOffersLoadingStatus } from '../../store/main/slice';
+import { selectFavoriteOffers, selectFavoriteOffersGroupedByCities, selectFavoriteOffersLoadingStatus, updateOffer } from '../../store/main/slice';
 import { useEffect } from 'react';
 import { fetchFavoriteOffersAction } from '../../store/main/api-action';
 import Loader from '../../components/loader/loader';
 import FavoritesEmptyPage from '../favorites-empty-page/favorites-empty-page';
+import { toast } from 'react-toastify';
 
 
 function FavoritesPage() {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector(selectFavoriteOffers);
-  const citiesFavoriteOffers = useAppSelector(selectCitiesFavoriteOffers);
-  const isLoading = useAppSelector(selectOffersLoadingStatus);
-  const isLoadingFailed = useAppSelector(selectOffersLoadingFailedStatus);
+  const favoriteOffers = useAppSelector(selectFavoriteOffers);
+  const favoriteOffersGroupedByCities = useAppSelector(selectFavoriteOffersGroupedByCities);
+  const favoriteOffersStatus = useAppSelector(selectFavoriteOffersLoadingStatus);
 
   useEffect(() => {
-    dispatch(fetchFavoriteOffersAction());
+    dispatch(fetchFavoriteOffersAction())
+      .unwrap()
+      .then((data) => {
+        data.forEach((offer) => dispatch(updateOffer(offer)));
+      })
+      .catch((error) => {
+        if(error === RequestStatus.Error) {
+          toast.warn('Loading failed');
+        }
+      });
   }, [dispatch]);
 
-  if(isLoading.favoriteOffers) {
+  if(favoriteOffersStatus === RequestStatus.Loading) {
     return <Loader />;
   }
 
-  if (isLoadingFailed.favoriteOffers) {
+  if (favoriteOffersStatus === RequestStatus.Error) {
     return (
       <div className="page">
         <Header />
@@ -36,12 +45,12 @@ function FavoritesPage() {
     );
   }
 
-  if(!offers.length) {
+  if (!favoriteOffers.length) {
     return <FavoritesEmptyPage />;
   }
 
   return (
-    <div className="page">
+    <div className="page" data-testid="favorites-page">
       <Helmet>
         <title>6 Cities. Избранное</title>
       </Helmet>
@@ -53,7 +62,7 @@ function FavoritesPage() {
             <h1 className="favorites__title">Saved listing</h1>
             <ul className="favorites__list">
               {
-                citiesFavoriteOffers.map((cityOffers) => (
+                favoriteOffersGroupedByCities.map((cityOffers) => (
                   <li className="favorites__locations-items" key={cityOffers[0].city.name}>
                     <div className="favorites__locations locations locations--current">
                       <div className="locations__item">

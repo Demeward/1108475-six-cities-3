@@ -1,97 +1,85 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppRoute } from '../../const';
-import { createSelector, createAction } from '@reduxjs/toolkit';
 import { Offer } from '../../types/offer';
-import { fetchOffersAction, fetchFavoriteOffersAction } from './api-action';
 import { State } from '../../types/state';
-import { NameSpace } from '../../const';
-
-type Loading = {
-  offers: boolean;
-  favoriteOffers: boolean;
-}
+import { AppRoute, NameSpace, RequestStatus } from '../../const';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createAction } from '@reduxjs/toolkit';
+import { fetchOffersAction, fetchFavoriteOffersAction } from './api-action';
 
 export type OffersState = {
   offers: Offer[];
-  isLoading: Loading;
-  isLoadingFailed: Loading;
-  error: string | null;
+  offersLoadingStatus: RequestStatus;
+  favoriteOffersLoadingStatus: RequestStatus;
 }
 
 const initialState: OffersState = {
   offers: [],
-  isLoading: {
-    offers: false,
-    favoriteOffers: false,
-  },
-  isLoadingFailed: {
-    offers: false,
-    favoriteOffers: false,
-  },
-  error: null
+  offersLoadingStatus: RequestStatus.Idle,
+  favoriteOffersLoadingStatus: RequestStatus.Idle,
 };
 
 export const mainSlice = createSlice({
   name: NameSpace.Main,
   initialState,
   reducers: {
-    updateFavoriteOffer(state, action: PayloadAction<Offer>) {
+    updateOffer: (state, action: PayloadAction<Offer>) => {
+      const index = state.offers.findIndex((offer) => offer.id === action.payload.id);
+      if (index !== -1) {
+        state.offers[index] = action.payload;
+      } else {
+        state.offers = [...state.offers, action.payload];
+      }
+    },
+    updateFavoriteOffer: (state, action: PayloadAction<Offer>) => {
       const index = state.offers.findIndex((offer) => offer.id === action.payload.id);
       if(index !== -1) {
         state.offers[index].isFavorite = action.payload.isFavorite;
       }
-    },
-    setError(state, action: PayloadAction<string | null>) {
-      state.error = action.payload;
     }
   },
-  extraReducers: (builder) => {
+  extraReducers(builder) {
     builder
       .addCase(fetchOffersAction.pending, (state) => {
-        state.isLoading.offers = true;
-        state.isLoadingFailed.offers = false;
+        state.offersLoadingStatus = RequestStatus.Loading;
       })
       .addCase(fetchOffersAction.fulfilled, (state, action) => {
-        state.isLoading.offers = false;
+        state.offersLoadingStatus = RequestStatus.Success;
         state.offers = action.payload;
       })
       .addCase(fetchOffersAction.rejected, (state) => {
-        state.isLoading.offers = false;
-        state.isLoadingFailed.offers = true;
+        state.offersLoadingStatus = RequestStatus.Error;
       })
       .addCase(fetchFavoriteOffersAction.pending, (state) => {
-        state.isLoading.favoriteOffers = true;
-        state.isLoadingFailed.favoriteOffers = false;
+        state.favoriteOffersLoadingStatus = RequestStatus.Loading;
       })
       .addCase(fetchFavoriteOffersAction.fulfilled, (state) => {
-        state.isLoading.favoriteOffers = false;
+        state.favoriteOffersLoadingStatus = RequestStatus.Success;
       })
       .addCase(fetchFavoriteOffersAction.rejected, (state) => {
-        state.isLoading.favoriteOffers = false;
-        state.isLoadingFailed.favoriteOffers = true;
+        state.favoriteOffersLoadingStatus = RequestStatus.Error;
       });
   }
 });
 
-export const { updateFavoriteOffer, setError } = mainSlice.actions;
+export const { updateOffer, updateFavoriteOffer } = mainSlice.actions;
+export default mainSlice.reducer;
 
 
 export const selectFilteredOffers = createSelector(
   [
-    (state: State) => state[NameSpace.Main].offers,
-    (_state: State, activeCity: string) => activeCity,
+    (state: Pick<State, NameSpace.Main>) => state[NameSpace.Main].offers,
+    (_state: Pick<State, NameSpace.Main>, activeCity: string) => activeCity,
   ],
   (offers, activeCity) => offers.filter((offer) => offer.city.name === activeCity)
 );
 
 export const selectFavoriteOffers = createSelector(
   [
-    (state: State) => state[NameSpace.Main].offers,
+    (state: Pick<State, NameSpace.Main>) => state[NameSpace.Main].offers,
   ],
   (offers) => offers.filter((offer) => offer.isFavorite)
 );
 
-export const selectCitiesFavoriteOffers = createSelector(
+export const selectFavoriteOffersGroupedByCities = createSelector(
   [
     selectFavoriteOffers,
   ],
@@ -104,10 +92,8 @@ export const selectCitiesFavoriteOffers = createSelector(
 
 export const redirectToRoute = createAction<AppRoute>('main/redirectToRoute');
 
-export const selectOffers = (state: State): Offer[] => state[NameSpace.Main].offers;
+export const selectOffers = (state: Pick<State, NameSpace.Main>): Offer[] => state[NameSpace.Main].offers;
 
-export const selectOffersLoadingStatus = (state: State): Loading => state[NameSpace.Main].isLoading;
+export const selectOffersLoadingStatus = (state: Pick<State, NameSpace.Main>): RequestStatus => state[NameSpace.Main].offersLoadingStatus;
 
-export const selectOffersLoadingFailedStatus = (state: State): Loading => state[NameSpace.Main].isLoadingFailed;
-
-export const selectError = (state: State): string | null => state[NameSpace.Main].error;
+export const selectFavoriteOffersLoadingStatus = (state: Pick<State, NameSpace.Main>): RequestStatus => state[NameSpace.Main].favoriteOffersLoadingStatus;

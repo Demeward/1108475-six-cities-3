@@ -3,16 +3,18 @@ import Reviews from '../../components/reviews/reviews';
 import OffersMap from '../../components/offers-map/offers-map';
 import NearOffers from '../../components/near-offers/near-offers';
 import Loader from '../../components/loader/loader';
-import { AppRoute, AuthorizationStatus } from '../../const';
-import { useCallback, useEffect, useState } from 'react';
+import { AppRoute, AuthorizationStatus, AvatarSize, RequestStatus } from '../../const';
+import { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { selectAuthorizationStatus } from '../../store/user/slice';
-import { selectLoadingFailedStatus, selectNearOffersBatch, selectOffer, updateFavoriteCurrentOffer } from '../../store/offer/slice';
-import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction, changeOfferFavoriteStatus } from '../../store/offer/api-action';
+import { selectOfferLoadingStatus, selectNearOffersBatch, selectOffer, updateFavoriteCurrentOffer, selectNearOffersLoadingStatus } from '../../store/offer/slice';
+import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction, updateFavoriteStatusAction } from '../../store/offer/api-action';
 import { redirectToRoute } from '../../store/main/slice';
+import { toast } from 'react-toastify';
 
+const IMAGES_MAX_LENGTH = 6;
 
 function OfferPage() {
   const navigate = useNavigate();
@@ -22,11 +24,10 @@ function OfferPage() {
   const { id: currentId } = useParams();
   const currentOffer = useAppSelector(selectOffer);
   const nearOffers = useAppSelector(selectNearOffersBatch);
-  const isLoadingFailed = useAppSelector(selectLoadingFailedStatus);
-  const [isLoading, setLoading] = useState(true);
+  const nearOffersLoadingStatus = useAppSelector(selectNearOffersLoadingStatus);
+  const offerStatus = useAppSelector(selectOfferLoadingStatus);
 
   useEffect(() => {
-    setLoading(true);
     dispatch(fetchOfferAction(currentId as string))
       .unwrap()
       .then(() => {
@@ -36,9 +37,9 @@ function OfferPage() {
       .catch((rejectedValue) => {
         if (rejectedValue === 'NOT_FOUND') {
           dispatch(redirectToRoute(AppRoute.NotFound));
+          toast.warn('Предложение не найдено');
         }
-      })
-      .finally(() => setLoading(false));
+      });
   }, [currentId, dispatch]);
 
 
@@ -48,24 +49,27 @@ function OfferPage() {
       return;
     }
     if(currentOffer) {
-      dispatch(changeOfferFavoriteStatus({ offerId: currentOffer.id, isFavorite: !currentOffer.isFavorite }))
+      dispatch(updateFavoriteStatusAction({ offerId: currentOffer.id, isFavorite: !currentOffer.isFavorite }))
         .unwrap()
         .then((data) => {
           dispatch(updateFavoriteCurrentOffer(data));
         })
-        .catch(() => {
+        .catch((rejectedValue) => {
+          if(rejectedValue === RequestStatus.Error) {
+            toast.warn('Не удалось изменить статус избранного предложения');
+          }
         });
     }
   }, [authorizationStatus, currentOffer, location, navigate, dispatch]);
 
 
-  if (isLoading || !currentOffer) {
+  if (offerStatus === RequestStatus.Loading || !currentOffer) {
     return (
       <Loader />
     );
   }
 
-  if(isLoadingFailed.currentOffer) {
+  if(offerStatus === RequestStatus.Error) {
     return (
       <div className='container'><h2>Не удалось загрузить страницу предложения.</h2></div>
     );
@@ -85,11 +89,15 @@ function OfferPage() {
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
               {
-                images.map((image) => (
-                  <div key={image} className="offer__image-wrapper">
-                    <img className="offer__image" src={image} alt="Photo studio" />
-                  </div>
-                ))
+                images.map((image, index) => {
+                  if (index < IMAGES_MAX_LENGTH) {
+                    return (
+                      <div key={image} className="offer__image-wrapper">
+                        <img className="offer__image" src={image} alt="Photo studio" />
+                      </div>
+                    );
+                  }
+                })
               }
             </div>
           </div>
@@ -139,10 +147,10 @@ function OfferPage() {
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div className={`offer__avatar-wrapper ${(host.isPro) ? 'offer__avatar-wrapper--pro' : ''} user__avatar-wrapper`}>
-                    <img className="offer__avatar user__avatar" src={host.avatarUrl} width="74" height="74" alt="Host avatar"/>
+                    <img className="offer__avatar user__avatar" src={host.avatarUrl} width={AvatarSize.Host} height={AvatarSize.Host} alt="Host avatar"/>
                   </div>
                   <span className="offer__user-name">{host.name}</span>
-                  <span className="offer__user-status">{host.isPro ? 'Pro' : ''}</span>
+                  {host.isPro ? <span className="offer__user-status">Pro</span> : ''}
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">{description}</p>
@@ -152,7 +160,7 @@ function OfferPage() {
             </div>
           </div>
           <section className="offer__map map">
-            {nearOffers.length ? <OffersMap offers={[...nearOffers, currentOffer]} activeOffer={currentOffer} /> : ''}
+            {nearOffers.length && nearOffersLoadingStatus === RequestStatus.Success ? <OffersMap offers={[...nearOffers, currentOffer]} activeOffer={currentOffer} /> : ''}
           </section>
         </section>
         <div className="container">

@@ -1,16 +1,22 @@
 import OfferCard from '../offer-card/offer-card';
-import { OfferCardVariant } from '../../const';
+import { OfferCardVariant, RequestStatus } from '../../const';
 import { useAppSelector } from '../../store';
-import { selectLoadingStatus, selectNearOffersBatch } from '../../store/offer/slice';
+import { selectNearOffersLoadingStatus, selectNearOffersBatch } from '../../store/offer/slice';
 import Loader from '../loader/loader';
 
 
 function NearOffers() {
   const nearOffers = useAppSelector(selectNearOffersBatch);
-  const isLoading = useAppSelector(selectLoadingStatus);
+  const nearOffersStatus = useAppSelector(selectNearOffersLoadingStatus);
 
-  if(isLoading.nearOffers) {
+  if(nearOffersStatus === RequestStatus.Loading) {
     return <Loader />;
+  }
+
+  if (nearOffersStatus === RequestStatus.Error) {
+    return (
+      <h2 className="near-places__title">Не удалось загрузить предложения неподалёку</h2>
+    );
   }
 
   return (

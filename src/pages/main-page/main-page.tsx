@@ -2,9 +2,10 @@ import Header from '../../components/header/header';
 import OffersEmpty from '../../components/offers-empty/offers-empty';
 import CitiesTabs from '../../components/cities-tabs/cities-tabs';
 import CitiesContent from '../../components/cities-content/cities-content';
-import { CITIES } from '../../const';
+import { Helmet } from 'react-helmet-async';
+import { CITIES, RequestStatus } from '../../const';
 import { useAppSelector } from '../../store';
-import { selectFilteredOffers, selectOffersLoadingFailedStatus } from '../../store/main/slice';
+import { selectFilteredOffers, selectOffersLoadingStatus } from '../../store/main/slice';
 import { useSearchParams } from 'react-router-dom';
 
 
@@ -12,9 +13,9 @@ function MainPage() {
   const [searchParams] = useSearchParams();
   const activeCity = searchParams.get('city') ?? CITIES[0];
   const offers = useAppSelector((state) => selectFilteredOffers(state, activeCity));
-  const isLoadingFailed = useAppSelector(selectOffersLoadingFailedStatus);
+  const offersStatus = useAppSelector(selectOffersLoadingStatus);
 
-  if (isLoadingFailed.offers) {
+  if (offersStatus === RequestStatus.Error) {
     return (
       <div className="page page--gray page--main">
         <Header />
@@ -25,6 +26,9 @@ function MainPage() {
 
   return (
     <div className="page page--gray page--main">
+      <Helmet>
+        <title>6 Cities. Главная страница</title>
+      </Helmet>
       <Header />
 
       {!offers.length ?

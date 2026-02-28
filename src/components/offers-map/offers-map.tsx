@@ -1,16 +1,16 @@
-import leaflet from 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useRef, useEffect, memo, FC} from 'react';
 import useMap from '../../hooks/useMap';
 import { Offer } from '../../types/offer';
 
-const defaultCustomIcon = leaflet.icon({
+const defaultCustomIcon = L.icon({
   iconUrl: 'markup/img/pin.svg',
   iconSize: [27, 39],
   iconAnchor: [14, 39],
 });
 
-const currentCustomIcon = leaflet.icon({
+const currentCustomIcon = L.icon({
   iconUrl: 'markup/img/pin-active.svg',
   iconSize: [27, 39],
   iconAnchor: [14, 39],
@@ -28,19 +28,24 @@ function equalProps(prevProps: OffersMapProps, nextProps: OffersMapProps) {
 const OffersMap: FC<OffersMapProps> = memo(({offers, activeOffer}: OffersMapProps) => {
   const { location } = offers[0].city;
   const mapRef = useRef(null);
+  const mapMarkersRef = useRef<L.Marker[]>([]);
   const map = useMap(mapRef, location);
 
   useEffect(() => {
     if (map) {
+      mapMarkersRef.current.forEach((marker) => {
+        map.removeLayer(marker);
+      });
+      mapMarkersRef.current = [];
+
       offers.forEach((offer) => {
-        leaflet
-          .marker({
-            lat: offer.location.latitude,
-            lng: offer.location.longitude,
-          }, {
-            icon: (offer.id === activeOffer?.id ? currentCustomIcon : defaultCustomIcon),
-          })
-          .addTo(map);
+
+        const marker = L.marker([offer.location.latitude, offer.location.longitude], {
+          icon: (offer.id === activeOffer?.id ? currentCustomIcon : defaultCustomIcon),
+        });
+
+        marker.addTo(map);
+        mapMarkersRef.current.push(marker);
       });
     }
   }, [map, offers, activeOffer]);

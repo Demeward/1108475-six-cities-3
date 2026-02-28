@@ -1,8 +1,7 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axios';
 import { getToken } from './services/token';
-import { store } from './store';
-import { setError } from './store/main/slice';
-import { clearErrorAction } from './store/main/api-action';
+import { toast } from 'react-toastify';
+import { StatusCode } from './const';
 
 const BACKEND_URL = 'https://15.design.htmlacademy.pro/six-cities';
 const REQUEST_TIMEOUT = 5000;
@@ -36,13 +35,13 @@ export const createAPI = (): AxiosInstance => {
       if (error.response) {
         const detailMessage = (error.response.data);
 
-        if (detailMessage.errorType === 'VALIDATION_ERROR') {
-          store.dispatch(setError('Password must include at least 1 digit and 1 letter'));
-        } else {
-          store.dispatch(setError(detailMessage.message));
+        if(error.response.status === StatusCode.Unathorized) {
+          toast.warn('Not Authorized');
         }
 
-        store.dispatch(clearErrorAction());
+        if(error.response.status === StatusCode.BadRequest) {
+          toast.warn(detailMessage.message);
+        }
       }
 
       throw error;

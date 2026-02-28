@@ -9,6 +9,8 @@ import { selectAuthorizationStatus } from '../../store/user/slice';
 import { loginAction } from '../../store/user/api-action';
 import { fetchOffersAction } from '../../store/main/api-action';
 import { redirectToRoute } from '../../store/main/slice';
+import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 type LocationState = { from: AppRoute }
 function LoginPage() {
@@ -20,6 +22,10 @@ function LoginPage() {
 
   const handleLoginSubmit = useCallback((evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
+
+    if (!evt.currentTarget.reportValidity()) {
+      return;
+    }
 
     const form = new FormData(evt.currentTarget);
     const email = form.get('email') as string;
@@ -36,7 +42,11 @@ function LoginPage() {
           dispatch(fetchOffersAction());
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        if(error instanceof AxiosError) {
+          toast.warn(error.message);
+          throw error;
+        }
       });
   }, [dispatch]);
 
@@ -53,7 +63,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="page page--gray page--login">
+    <div className="page page--gray page--login" data-testid='login-page'>
       <Helmet>
         <title>6 Cities. Авторизация</title>
       </Helmet>
@@ -74,11 +84,15 @@ function LoginPage() {
             <form className="login__form form" action="#" method="post" onSubmit={handleLoginSubmit}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input className="login__input form__input" type="email" name="email" placeholder="Email" />
+                <input className="login__input form__input" type="email" name="email" placeholder="Email" required />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
-                <input className="login__input form__input" type="password" name="password" placeholder="Password" />
+                <input className="login__input form__input" type="password" name="password" placeholder="Password"
+                  pattern="^(?=.*[a-zA-Z])(?=.*\d).+$"
+                  title="Password must contain at least one letter and one digit"
+                  required
+                />
               </div>
               <button className="login__submit form__submit button" type="submit">Sign in</button>
             </form>

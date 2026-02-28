@@ -46,12 +46,21 @@ export const userSlice = createSlice({
       })
       .addCase(logoutAction.fulfilled, (state) => {
         state.authorizationStatus = AuthorizationStatus.NotAuth;
+        state.userData = {
+          name: '',
+          avatarUrl: '',
+          isPro: false,
+          email: '',
+          token: ''
+        };
       });
   }
 });
 
-export const selectUserData = (state: State): UserData => state[NameSpace.User].userData;
+export default userSlice.reducer;
 
-export const selectAuthorizationStatus = (state: State): AuthorizationStatus => state[NameSpace.User].authorizationStatus;
+export const selectUserData = (state: Pick<State, NameSpace.User>): UserData => state[NameSpace.User].userData;
 
-export const selectAuthorizationChecked = (state: State): boolean => state[NameSpace.User].authorizationStatus !== AuthorizationStatus.Unknown;
+export const selectAuthorizationStatus = (state: Pick<State, NameSpace.User>): AuthorizationStatus => state[NameSpace.User].authorizationStatus;
+
+export const selectAuthorizationChecked = (state: Pick<State, NameSpace.User>): boolean => state[NameSpace.User].authorizationStatus !== AuthorizationStatus.Unknown;

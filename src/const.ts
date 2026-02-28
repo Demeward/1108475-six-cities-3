@@ -29,6 +29,12 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN'
 }
 
+export const StatusCode = {
+  BadRequest: 400,
+  Unathorized: 401,
+  NotFound: 404
+} as const;
+
 export enum OfferCardVariant {
   Cities = 'cities',
   Near = 'near-places',
@@ -42,11 +48,44 @@ export enum Sorting {
   TopRated = 'Top rated first'
 }
 
+export const Rating = {
+  Perfect: {
+    name: 'perfect',
+    value: 5
+  },
+  Good: {
+    name: 'good',
+    value: 4
+  },
+  NotBad: {
+    name: 'not bad',
+    value: 3
+  },
+  Badly: {
+    name: 'badly',
+    value: 2
+  },
+  Terribly: {
+    name: 'terribly',
+    value: 1
+  },
+} as const;
+
+export const AvatarSize = {
+  User: 54,
+  Host: 74
+} as const;
+
 export const FavoriteStatus = {
   Favorite: '1',
   NotFavorite: '0'
 } as const;
 
-export const ERROR_MESSAGE_TIMEOUT = 3000;
+export enum RequestStatus {
+  Idle = 'IDLE',
+  Loading = 'LOADING',
+  Success = 'SUCCESS',
+  Error = 'ERROR',
+}
 
 export const CITIES: string[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];

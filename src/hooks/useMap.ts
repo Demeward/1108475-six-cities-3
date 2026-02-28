@@ -1,15 +1,15 @@
-import leaflet from 'leaflet';
+import L from 'leaflet';
 import { useState, useRef, useEffect, MutableRefObject } from 'react';
 import { Location } from '../types/offer';
 
 
-function useMap(mapRef: MutableRefObject<HTMLElement | null>, location: Location): leaflet.Map | null {
-  const [map, setMap] = useState<leaflet.Map | null>(null);
+function useMap(mapRef: MutableRefObject<HTMLElement | null>, location: Location): L.Map | null {
+  const [map, setMap] = useState<L.Map | null>(null);
   const isRenderedRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (mapRef.current && !isRenderedRef.current) {
-      const instance = leaflet.map(mapRef.current, {
+      const instance = L.map(mapRef.current, {
         center: {
           lat: location.latitude,
           lng: location.longitude,
@@ -17,7 +17,7 @@ function useMap(mapRef: MutableRefObject<HTMLElement | null>, location: Location
         zoom: location.zoom,
       });
 
-      leaflet
+      L
         .tileLayer(
           'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
           {
