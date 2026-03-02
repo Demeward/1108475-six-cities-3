@@ -4,16 +4,17 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { selectUserData } from '../../store/user/slice';
 import { logoutAction } from '../../store/user/api-action';
 import { selectFavoriteOffers } from '../../store/main/slice';
+import { useCallback } from 'react';
 
 function AuthorizedMenu() {
   const dispatch = useAppDispatch();
   const profile = useAppSelector(selectUserData);
   const favoriteOffers = useAppSelector(selectFavoriteOffers);
 
-  const handleLogoutClick = (evt: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const handleLogoutClick = useCallback((evt: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     evt.preventDefault();
     dispatch(logoutAction());
-  };
+  }, [dispatch]);
 
 
   return (

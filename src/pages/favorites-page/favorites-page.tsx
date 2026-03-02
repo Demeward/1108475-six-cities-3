@@ -50,7 +50,7 @@ function FavoritesPage() {
   }
 
   return (
-    <div className="page" data-testid="favorites-page">
+    <div className="page">
       <Helmet>
         <title>6 Cities. Избранное</title>
       </Helmet>

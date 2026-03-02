@@ -8,11 +8,8 @@ import { Comment } from '../../types/comment';
 
 const MAX_NEAROFFERS_LENGTH = 3;
 
-type PropertyOffer = OfferFull | null;
-
-
 export type OfferState = {
-  currentOffer: PropertyOffer;
+  currentOffer: OfferFull | null;
   reviews: Comment[];
   nearOffers: Offer[];
   offerLoadingStatus: RequestStatus;
@@ -96,7 +93,7 @@ export const offerSlice = createSlice({
 export const { updateFavoriteCurrentOffer, updateFavoriteNearOffer } = offerSlice.actions;
 export default offerSlice.reducer;
 
-export const selectOffer = (state: Pick<State, NameSpace.Offer>): PropertyOffer => state[NameSpace.Offer].currentOffer;
+export const selectOffer = (state: Pick<State, NameSpace.Offer>): OfferFull | null => state[NameSpace.Offer].currentOffer;
 
 export const selectReviews = (state: Pick<State, NameSpace.Offer>): Comment[] => state[NameSpace.Offer].reviews;
 

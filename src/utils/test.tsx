@@ -1,33 +1,15 @@
 import { MockStore, configureMockStore } from '@jedmao/redux-mock-store';
 import MockAdapter from 'axios-mock-adapter';
-import { AuthorizationStatus, RequestStatus, Sorting } from './const';
-import { Offer } from './types/offer';
+import { AuthorizationStatus, RequestStatus } from '../const';
 import { Action } from 'redux';
-import { State, AppThunkDispatch } from './types/state';
+import { State, AppThunkDispatch } from '../types/state';
 import { MemoryHistory, createMemoryHistory } from 'history';
-import HistoryRouter from './components/history-route/history-route';
+import HistoryRouter from '../components/history-route/history-route';
 import { HelmetProvider } from 'react-helmet-async';
-import { createAPI } from './api';
+import { createAPI } from '../api';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 
-export const getRandomCity = (cities: string[]): string => {
-  const randomElem: number = Math.floor(Math.random() * cities.length);
-  return cities[randomElem];
-};
-
-export const sortOffers = (offers: Offer[], sortingType: Sorting): Offer[] => {
-  switch(sortingType) {
-    case Sorting.LowToHigh:
-      return offers.toSorted((a, b): number => a.price - b.price);
-    case Sorting.HighToLow:
-      return offers.toSorted((a, b): number => b.price - a.price);
-    case Sorting.TopRated:
-      return offers.toSorted((a, b): number => b.rating - a.rating);
-    case Sorting.Popular:
-      return offers;
-  }
-};
 
 export const extractActionsTypes = (actions: Action<string>[]) => actions.map(({ type }) => type);
 
@@ -63,9 +45,9 @@ export function createComponentWithHistory(component: JSX.Element, history?: Mem
   const memoryHistory = history ?? createMemoryHistory();
 
   return (
-    <HistoryRouter history= { memoryHistory }>
+    <HistoryRouter history={memoryHistory}>
       <HelmetProvider>
-        { component }
+        {component}
       </HelmetProvider>
     </HistoryRouter>
   );
