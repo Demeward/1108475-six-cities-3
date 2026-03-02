@@ -47,10 +47,10 @@ function ReviewForm() {
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
         {
-          Object.values(Rating).map(({name, value}) => (
+          Object.values(Rating).map((value, index, arr) => (
             <React.Fragment key={value}>
-              <input className="form__rating-input visually-hidden" name="rating" value={`${value}`} id={`${value}-stars`} type="radio" onChange={handleRatingChange} checked={rating === value} disabled={isReviewPosting === RequestStatus.Loading} />
-              <label htmlFor={`${value}-stars`} className="reviews__rating-label form__rating-label" title={name}>
+              <input className="form__rating-input visually-hidden" name="rating" value={`${arr.length - index}`} id={`${arr.length - index}-stars`} type="radio" onChange={handleRatingChange} checked={rating === arr.length - index} disabled={isReviewPosting === RequestStatus.Loading} />
+              <label htmlFor={`${arr.length - index}-stars`} className="reviews__rating-label form__rating-label" title={value}>
                 <svg className="form__star-image" width="37" height="33">
                   <use xlinkHref="#icon-star" />
                 </svg>

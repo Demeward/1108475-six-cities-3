@@ -4,7 +4,7 @@ import { createAPI } from '../../api';
 import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
 import { Action } from 'redux';
-import { extractActionsTypes } from '../../utils';
+import { extractActionsTypes } from '../../utils/test';
 import { State, AppThunkDispatch } from '../../types/state';
 import { APIRoute, RequestStatus } from '../../const';
 import { mockOffers } from '../../mocks/offers';

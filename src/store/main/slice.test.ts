@@ -96,18 +96,36 @@ describe('MainSlice selectors', () => {
   it('should return offers filtered by active city from state', () => {
     const activeCity = 'Amsterdam';
     const result = selectFilteredOffers(state, activeCity);
-    result.forEach((offer) => expect(offer.city.name).toBe(activeCity));
+    expect(result).toHaveLength(4);
+    expect(result[0].city.name).toBe(activeCity);
+    expect(result[1].city.name).toBe(activeCity);
+    expect(result[2].city.name).toBe(activeCity);
+    expect(result[3].city.name).toBe(activeCity);
   });
 
   it('should return favorite offers from state', () => {
     const result = selectFavoriteOffers(state);
-    result.forEach((offer) => expect(offer.isFavorite).toBe(true));
+    expect(result).toHaveLength(4);
+    expect(result[0].isFavorite).toBe(true);
+    expect(result[1].isFavorite).toBe(true);
+    expect(result[2].isFavorite).toBe(true);
+    expect(result[3].isFavorite).toBe(true);
   });
 
   it('should return favorite offers grouped by cities from state', () => {
     const result = selectFavoriteOffersGroupedByCities(state);
     expect(result).toHaveLength(2);
-    result.forEach((cityOffers) => expect(cityOffers[0].isFavorite).toBe(true));
+    expect(result[0][0].city.name).toBe('Paris');
+    expect(result[0][0].isFavorite).toBe(true);
+
+    expect(result[0][1].city.name).toBe('Paris');
+    expect(result[0][1].isFavorite).toBe(true);
+
+    expect(result[1][0].city.name).toBe('Amsterdam');
+    expect(result[0][1].isFavorite).toBe(true);
+
+    expect(result[1][1].city.name).toBe('Amsterdam');
+    expect(result[1][1].isFavorite).toBe(true);
   });
 
   it('should return request status from state', () => {

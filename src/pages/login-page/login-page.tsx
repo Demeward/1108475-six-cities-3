@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FormEvent, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { AppRoute, AuthorizationStatus, CITIES, Sorting } from '../../const';
-import { getRandomCity } from '../../utils';
+import { getRandomCity } from '../../utils/common';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { selectAuthorizationStatus } from '../../store/user/slice';
 import { loginAction } from '../../store/user/api-action';
@@ -63,7 +63,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="page page--gray page--login" data-testid='login-page'>
+    <div className="page page--gray page--login">
       <Helmet>
         <title>6 Cities. Авторизация</title>
       </Helmet>

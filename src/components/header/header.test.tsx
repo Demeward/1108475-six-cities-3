@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import Header from './header';
 import { createMemoryHistory } from 'history';
 import { AuthorizationStatus } from '../../const';
-import { createComponentWithHistory, createComponentWithStore, createFakeStore } from '../../utils';
+import { createComponentWithHistory, createComponentWithStore, createFakeStore } from '../../utils/test';
 
 describe('Header component', () => {
   const mockHistory = createMemoryHistory();

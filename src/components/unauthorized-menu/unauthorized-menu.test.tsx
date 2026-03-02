@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import UnauthorizedMenu from './unauthorized-menu';
-import { createComponentWithHistory } from '../../utils';
+import { createComponentWithHistory } from '../../utils/test';
 import { createMemoryHistory } from 'history';
 import { AppRoute } from '../../const';
 

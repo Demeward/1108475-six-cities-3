@@ -57,8 +57,6 @@ export const userSlice = createSlice({
   }
 });
 
-export default userSlice.reducer;
-
 export const selectUserData = (state: Pick<State, NameSpace.User>): UserData => state[NameSpace.User].userData;
 
 export const selectAuthorizationStatus = (state: Pick<State, NameSpace.User>): AuthorizationStatus => state[NameSpace.User].authorizationStatus;

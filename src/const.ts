@@ -48,28 +48,13 @@ export enum Sorting {
   TopRated = 'Top rated first'
 }
 
-export const Rating = {
-  Perfect: {
-    name: 'perfect',
-    value: 5
-  },
-  Good: {
-    name: 'good',
-    value: 4
-  },
-  NotBad: {
-    name: 'not bad',
-    value: 3
-  },
-  Badly: {
-    name: 'badly',
-    value: 2
-  },
-  Terribly: {
-    name: 'terribly',
-    value: 1
-  },
-} as const;
+export enum Rating {
+  Perfect = 'perfect',
+  Good = 'good',
+  NotBad = 'not bad',
+  Badly = 'badly',
+  Terribly = 'terribly'
+}
 
 export const AvatarSize = {
   User: 54,

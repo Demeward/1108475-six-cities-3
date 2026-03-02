@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import FavoritesEmptyPage from './favorites-empty-page';
 import { createMemoryHistory } from 'history';
 import { AppRoute } from '../../const';
-import { createComponentWithHistory, createComponentWithStore, createFakeStore } from '../../utils';
+import { createComponentWithHistory, createComponentWithStore, createFakeStore } from '../../utils/test';
 
 describe('FavoritesEmptyPage', () => {
   const mockHistory = createMemoryHistory();

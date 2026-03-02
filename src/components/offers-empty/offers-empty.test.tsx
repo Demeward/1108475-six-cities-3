@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import OffersEmpty from './offers-empty';
-import { createComponentWithHistory } from '../../utils';
+import { createComponentWithHistory } from '../../utils/test';
 import { createMemoryHistory } from 'history';
 
 describe('OffersEmpty component', () => {

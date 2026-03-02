@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryHistory, createMemoryHistory } from 'history';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus, RequestStatus } from '../../const';
 import App from './app';
-import { createComponentWithHistory, createComponentWithStore, createFakeStore } from '../../utils';
+import { createComponentWithHistory, createComponentWithStore, createFakeStore } from '../../utils/test';
+import { mockOffers } from '../../mocks/offers';
 
 describe('Application Routing', () => {
   let mockHistory: MemoryHistory;
@@ -28,12 +29,19 @@ describe('Application Routing', () => {
 
     render(withStoreComponent);
 
-    expect(screen.getByTestId('login-page')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'Sign in'})).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
   });
 
   it('should render "FavoritesPage" when authorized user navigate to "/favorites"', () => {
     const withHistoryComponent = createComponentWithHistory(<App />, mockHistory);
     const { withStoreComponent } = createComponentWithStore(withHistoryComponent, createFakeStore({
+      MAIN: {
+        offers: mockOffers,
+        offersLoadingStatus: RequestStatus.Success,
+        favoriteOffersLoadingStatus: RequestStatus.Idle
+      },
       USER: {
         authorizationStatus: AuthorizationStatus.Auth,
         userData: {
@@ -48,7 +56,7 @@ describe('Application Routing', () => {
 
     render(withStoreComponent);
 
-    expect(screen.getByTestId('favorites-page')).toBeInTheDocument();
+    expect(screen.getByText('Saved listing')).toBeInTheDocument();
   });
 
   it('should render "LoginPage" when unauthorized user navigate to "/favorites"', () => {
@@ -69,7 +77,9 @@ describe('Application Routing', () => {
 
     render(withStoreComponent);
 
-    expect(screen.getByTestId('login-page')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
   });
 
   it('should render "NotFoundPage" when user navigate to non-existent route', () => {

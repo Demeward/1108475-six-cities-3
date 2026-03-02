@@ -3,7 +3,7 @@ import OfferCard from '../offer-card/offer-card';
 import { Offer } from '../../types/offer';
 import { Sorting, OfferCardVariant } from '../../const';
 import { memo, useMemo } from 'react';
-import { sortOffers } from '../../utils';
+import { sortOffers } from '../../utils/common';
 import { useSearchParams } from 'react-router-dom';
 
 
