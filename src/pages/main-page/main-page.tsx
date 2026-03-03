@@ -5,7 +5,7 @@ import CitiesContent from '../../components/cities-content/cities-content';
 import { Helmet } from 'react-helmet-async';
 import { CITIES, RequestStatus } from '../../const';
 import { useAppSelector } from '../../store';
-import { selectFilteredOffers, selectOffersLoadingStatus } from '../../store/main/slice';
+import { selectFilteredOffers, selectOffersLoadingStatus } from '../../store/main/main';
 import { useSearchParams } from 'react-router-dom';
 
 

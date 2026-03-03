@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { postReviewAction } from '../../store/offer/api-action';
 import { useState, FormEvent, useCallback } from 'react';
-import { selectReviewPostingStatus } from '../../store/offer/slice';
+import { selectReviewPostingStatus } from '../../store/offer/offer';
 import { Rating, RequestStatus } from '../../const';
 import { toast } from 'react-toastify';
 

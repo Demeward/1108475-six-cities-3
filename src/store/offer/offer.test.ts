@@ -4,7 +4,7 @@ import { mockReviews} from '../../mocks/reviews';
 import { offerSlice, updateFavoriteCurrentOffer, updateFavoriteNearOffer,
   selectOffer, selectNearOffers, selectReviews,
   selectNearOffersBatch, selectOfferLoadingStatus,
-  selectNearOffersLoadingStatus, selectReviewPostingStatus, selectReviewsLoadingStatus } from './slice';
+  selectNearOffersLoadingStatus, selectReviewPostingStatus, selectReviewsLoadingStatus } from './offer';
 import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction, postReviewAction } from './api-action';
 import { RequestStatus, NameSpace } from '../../const';
 

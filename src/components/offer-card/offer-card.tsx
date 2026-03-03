@@ -1,12 +1,14 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus, OfferCardVariant, RequestStatus } from '../../const';
 import { Offer } from '../../types/offer';
-import { selectAuthorizationStatus } from '../../store/user/slice';
+import { selectAuthorizationStatus } from '../../store/user/user';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { FC, memo, useCallback } from 'react';
 import { updateFavoriteStatusAction } from '../../store/offer/api-action';
-import { updateFavoriteNearOffer } from '../../store/offer/slice';
+import { updateFavoriteNearOffer } from '../../store/offer/offer';
 import { toast } from 'react-toastify';
+
+const RATING_MULTIPLIER = 20;
 
 const OfferCardSize = {
   Default: {
@@ -83,7 +85,7 @@ const OfferCard: FC<OfferCardProps> = memo(({ offer, cardVariant, onActiveOfferC
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${Math.round(rating) * 20}%` }} />
+            <span style={{ width: `${Math.round(rating) * RATING_MULTIPLIER}%` }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

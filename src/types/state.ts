@@ -1,7 +1,7 @@
 import { store } from '../store';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { createAPI } from '../api';
+import { createAPI } from '../api/api';
 
 
 export type State = ReturnType<typeof store.getState>;

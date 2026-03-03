@@ -2,7 +2,7 @@ import { describe } from 'vitest';
 import { mockOffers } from '../../mocks/offers';
 import { mainSlice, updateFavoriteOffer, updateOffer,
   selectOffers, selectFavoriteOffers, selectFilteredOffers,
-  selectFavoriteOffersGroupedByCities, selectOffersLoadingStatus, selectFavoriteOffersLoadingStatus } from './slice';
+  selectFavoriteOffersGroupedByCities, selectOffersLoadingStatus, selectFavoriteOffersLoadingStatus } from './main';
 import { fetchOffersAction, fetchFavoriteOffersAction} from './api-action';
 import { RequestStatus, NameSpace } from '../../const';
 

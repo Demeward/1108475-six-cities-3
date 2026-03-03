@@ -8,12 +8,13 @@ import { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { selectAuthorizationStatus } from '../../store/user/slice';
-import { selectOfferLoadingStatus, selectNearOffersBatch, selectOffer, updateFavoriteCurrentOffer, selectNearOffersLoadingStatus } from '../../store/offer/slice';
+import { selectAuthorizationStatus } from '../../store/user/user';
+import { selectOfferLoadingStatus, selectNearOffersBatch, selectOffer, updateFavoriteCurrentOffer, selectNearOffersLoadingStatus } from '../../store/offer/offer';
 import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction, updateFavoriteStatusAction } from '../../store/offer/api-action';
-import { redirectToRoute } from '../../store/main/slice';
+import { redirectToRoute } from '../../store/main/main';
 import { toast } from 'react-toastify';
 
+const RATING_MULTIPLIER = 20;
 const IMAGES_MAX_LENGTH = 6;
 
 function OfferPage() {
@@ -119,7 +120,7 @@ function OfferPage() {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{ width: `${Math.round(rating) * 20}%` }}></span>
+                  <span style={{ width: `${Math.round(rating) * RATING_MULTIPLIER}%` }}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">{rating}</span>

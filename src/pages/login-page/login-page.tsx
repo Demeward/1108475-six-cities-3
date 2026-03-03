@@ -5,10 +5,10 @@ import { Helmet } from 'react-helmet-async';
 import { AppRoute, AuthorizationStatus, CITIES, Sorting } from '../../const';
 import { getRandomCity } from '../../utils/common';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { selectAuthorizationStatus } from '../../store/user/slice';
+import { selectAuthorizationStatus } from '../../store/user/user';
 import { loginAction } from '../../store/user/api-action';
 import { fetchOffersAction } from '../../store/main/api-action';
-import { redirectToRoute } from '../../store/main/slice';
+import { redirectToRoute } from '../../store/main/main';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 
@@ -45,7 +45,6 @@ function LoginPage() {
       .catch((error) => {
         if(error instanceof AxiosError) {
           toast.warn(error.message);
-          throw error;
         }
       });
   }, [dispatch]);

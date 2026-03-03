@@ -1,8 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { NameSpace } from '../const';
-import {mainSlice} from './main/slice';
-import {userSlice} from './user/slice';
-import {offerSlice} from './offer/slice';
+import {mainSlice} from './main/main';
+import {userSlice} from './user/user';
+import {offerSlice} from './offer/offer';
 
 
 export const rootReducer = combineReducers({

@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { AppRoute, AvatarSize } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { selectUserData } from '../../store/user/slice';
+import { selectUserData } from '../../store/user/user';
 import { logoutAction } from '../../store/user/api-action';
-import { selectFavoriteOffers } from '../../store/main/slice';
+import { selectFavoriteOffers } from '../../store/main/main';
 import { useCallback } from 'react';
 
 function AuthorizedMenu() {

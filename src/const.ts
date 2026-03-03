@@ -31,7 +31,7 @@ export enum AuthorizationStatus {
 
 export const StatusCode = {
   BadRequest: 400,
-  Unathorized: 401,
+  Unauthorized: 401,
   NotFound: 404
 } as const;
 
@@ -52,8 +52,8 @@ export enum Rating {
   Perfect = 'perfect',
   Good = 'good',
   NotBad = 'not bad',
-  Badly = 'badly',
-  Terribly = 'terribly'
+  Bad = 'badly',
+  Terrible = 'terribly'
 }
 
 export const AvatarSize = {
