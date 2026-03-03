@@ -91,7 +91,6 @@ export const offerSlice = createSlice({
 });
 
 export const { updateFavoriteCurrentOffer, updateFavoriteNearOffer } = offerSlice.actions;
-export default offerSlice.reducer;
 
 export const selectOffer = (state: Pick<State, NameSpace.Offer>): OfferFull | null => state[NameSpace.Offer].currentOffer;
 
