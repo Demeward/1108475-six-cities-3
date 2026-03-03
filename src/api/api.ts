@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axios';
-import { getToken } from './services/token';
+import { getToken } from './token';
 import { toast } from 'react-toastify';
-import { StatusCode } from './const';
+import { StatusCode } from '../const';
 
 const BACKEND_URL = 'https://15.design.htmlacademy.pro/six-cities';
 const REQUEST_TIMEOUT = 5000;
@@ -35,7 +35,7 @@ export const createAPI = (): AxiosInstance => {
       if (error.response) {
         const detailMessage = (error.response.data);
 
-        if(error.response.status === StatusCode.Unathorized) {
+        if(error.response.status === StatusCode.Unauthorized) {
           toast.warn('Not Authorized');
         }
 

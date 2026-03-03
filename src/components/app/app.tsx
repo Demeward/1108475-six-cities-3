@@ -9,8 +9,8 @@ import { AppRoute, RequestStatus } from '../../const';
 import { Routes, Route, } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { useAppSelector } from '../../store';
-import { selectOffersLoadingStatus } from '../../store/main/slice';
-import { selectAuthorizationChecked } from '../../store/user/slice';
+import { selectOffersLoadingStatus } from '../../store/main/main';
+import { selectAuthorizationChecked } from '../../store/user/user';
 
 
 function App() {

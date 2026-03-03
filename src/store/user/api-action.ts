@@ -3,7 +3,7 @@ import { AxiosInstance } from 'axios';
 import { State } from '../../types/state';
 import { APIRoute, } from '../../const';
 import { CredentialsData, UserData } from '../../types/auth';
-import { saveToken, dropToken } from '../../services/token';
+import { saveToken, dropToken } from '../../api/token';
 
 
 export const checkAuthorizationAction = createAsyncThunk<UserData, undefined, {

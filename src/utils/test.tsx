@@ -6,7 +6,7 @@ import { State, AppThunkDispatch } from '../types/state';
 import { MemoryHistory, createMemoryHistory } from 'history';
 import HistoryRouter from '../components/history-route/history-route';
 import { HelmetProvider } from 'react-helmet-async';
-import { createAPI } from '../api';
+import { createAPI } from '../api/api';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 

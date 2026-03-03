@@ -1,5 +1,5 @@
 import { describe } from 'vitest';
-import { userSlice, selectUserData, selectAuthorizationStatus, selectAuthorizationChecked } from './slice';
+import { userSlice, selectUserData, selectAuthorizationStatus, selectAuthorizationChecked } from './user';
 import { checkAuthorizationAction, loginAction, logoutAction} from './api-action';
 import { AuthorizationStatus, NameSpace } from '../../const';
 import { CredentialsData, UserData } from '../../types/auth';

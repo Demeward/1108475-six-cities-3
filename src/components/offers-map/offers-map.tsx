@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useRef, useEffect, memo, FC} from 'react';
-import useMap from '../../hooks/useMap';
+import useMap from '../../hooks/use-map';
 import { Offer } from '../../types/offer';
 
 const defaultCustomIcon = L.icon({

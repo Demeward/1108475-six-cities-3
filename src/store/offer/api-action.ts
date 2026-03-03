@@ -6,7 +6,7 @@ import { Offer, OfferFull } from '../../types/offer';
 import { generatePath } from 'react-router-dom';
 import { Comment, Review } from '../../types/comment';
 import { AxiosError } from 'axios';
-import { updateFavoriteOffer } from '../main/slice';
+import { updateFavoriteOffer } from '../main/main';
 import { StatusCode } from '../../const';
 
 

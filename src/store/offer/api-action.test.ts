@@ -1,5 +1,5 @@
 import { configureMockStore } from '@jedmao/redux-mock-store';
-import { createAPI } from '../../api';
+import { createAPI } from '../../api/api';
 import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
 import { Action } from 'redux';
@@ -10,7 +10,7 @@ import { mockOffers, mockOfferFull } from '../../mocks/offers';
 import { mockReviews, mockNewReview } from '../../mocks/reviews';
 import { fetchOfferAction, fetchNearOffersAction, fetchReviewsAction, postReviewAction, updateFavoriteStatusAction } from './api-action';
 import { generatePath } from 'react-router-dom';
-import { updateFavoriteOffer } from '../main/slice';
+import { updateFavoriteOffer } from '../main/main';
 
 describe('Async functions', () => {
   const axios = createAPI();

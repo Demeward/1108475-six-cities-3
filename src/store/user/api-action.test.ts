@@ -1,5 +1,5 @@
 import { configureMockStore } from '@jedmao/redux-mock-store';
-import { createAPI } from '../../api';
+import { createAPI } from '../../api/api';
 import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
 import { Action } from 'redux';
@@ -8,7 +8,7 @@ import { State, AppThunkDispatch } from '../../types/state';
 import { APIRoute, AuthorizationStatus } from '../../const';
 import { checkAuthorizationAction, loginAction, logoutAction } from './api-action';
 import { CredentialsData, UserData } from '../../types/auth';
-import * as tokenStorage from '../../services/token';
+import * as tokenStorage from '../../api/token';
 
 const mockUser: UserData = {
   name: 'testName',
