@@ -61,7 +61,6 @@ export const mainSlice = createSlice({
 });
 
 export const { updateOffer, updateFavoriteOffer } = mainSlice.actions;
-export default mainSlice.reducer;
 
 
 export const selectFilteredOffers = createSelector(
