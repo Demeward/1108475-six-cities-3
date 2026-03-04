@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { postReviewAction } from '../../store/offer/api-action';
 import { useState, FormEvent, useCallback } from 'react';
 import { selectReviewPostingStatus } from '../../store/offer/offer';

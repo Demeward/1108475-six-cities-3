@@ -1,6 +1,6 @@
 import OfferCard from '../offer-card/offer-card';
 import { OfferCardVariant, RequestStatus } from '../../const';
-import { useAppSelector } from '../../store';
+import { useAppSelector } from '../../hooks/index';
 import { selectNearOffersLoadingStatus, selectNearOffersBatch } from '../../store/offer/offer';
 import Loader from '../loader/loader';
 

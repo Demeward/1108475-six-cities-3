@@ -8,7 +8,7 @@ import Loader from '../loader/loader';
 import { AppRoute, RequestStatus } from '../../const';
 import { Routes, Route, } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { useAppSelector } from '../../store';
+import { useAppSelector } from '../../hooks/index';
 import { selectOffersLoadingStatus } from '../../store/main/main';
 import { selectAuthorizationChecked } from '../../store/user/user';
 

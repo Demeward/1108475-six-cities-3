@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus, OfferCardVariant, RequestStatus } from '../../const';
 import { Offer } from '../../types/offer';
 import { selectAuthorizationStatus } from '../../store/user/user';
-import { useAppDispatch, useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { FC, memo, useCallback } from 'react';
 import { updateFavoriteStatusAction } from '../../store/offer/api-action';
 import { updateFavoriteNearOffer } from '../../store/offer/offer';

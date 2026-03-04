@@ -2,7 +2,7 @@ import Logo from '../logo/logo';
 import { AuthorizationStatus } from '../../const';
 import UnauthorizedMenu from '../unauthorized-menu/unauthorized-menu';
 import AuthorizedMenu from '../authorized-menu/authorized-menu';
-import { useAppSelector } from '../../store';
+import { useAppSelector } from '../../hooks/index';
 import { selectAuthorizationStatus } from '../../store/user/user';
 
 

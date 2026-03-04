@@ -4,7 +4,7 @@ import CitiesTabs from '../../components/cities-tabs/cities-tabs';
 import CitiesContent from '../../components/cities-content/cities-content';
 import { Helmet } from 'react-helmet-async';
 import { CITIES, RequestStatus } from '../../const';
-import { useAppSelector } from '../../store';
+import { useAppSelector } from '../../hooks/index';
 import { selectFilteredOffers, selectOffersLoadingStatus } from '../../store/main/main';
 import { useSearchParams } from 'react-router-dom';
 
