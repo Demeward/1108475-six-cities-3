@@ -2,7 +2,7 @@ import Review from '../review/review';
 import ReviewForm from '../review-form/review-form';
 import Loader from '../loader/loader';
 import { AuthorizationStatus, RequestStatus } from '../../const';
-import { useAppSelector } from '../../store';
+import { useAppSelector } from '../../hooks/index';
 import { selectReviewsLoadingStatus, selectReviews } from '../../store/offer/offer';
 import { useMemo } from 'react';
 

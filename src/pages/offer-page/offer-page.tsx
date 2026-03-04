@@ -7,7 +7,7 @@ import { AppRoute, AuthorizationStatus, AvatarSize, RequestStatus } from '../../
 import { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useAppDispatch, useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { selectAuthorizationStatus } from '../../store/user/user';
 import { selectOfferLoadingStatus, selectNearOffersBatch, selectOffer, updateFavoriteCurrentOffer, selectNearOffersLoadingStatus } from '../../store/offer/offer';
 import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction, updateFavoriteStatusAction } from '../../store/offer/api-action';

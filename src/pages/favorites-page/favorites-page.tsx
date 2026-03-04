@@ -4,7 +4,7 @@ import { AppRoute, RequestStatus, Sorting } from '../../const';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { OfferCardVariant } from '../../const';
-import { useAppDispatch, useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { selectFavoriteOffers, selectFavoriteOffersGroupedByCities, selectFavoriteOffersLoadingStatus, updateOffer } from '../../store/main/main';
 import { useEffect } from 'react';
 import { fetchFavoriteOffersAction } from '../../store/main/api-action';

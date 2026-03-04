@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { AppRoute, AvatarSize } from '../../const';
-import { useAppDispatch, useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { selectUserData } from '../../store/user/user';
 import { logoutAction } from '../../store/user/api-action';
 import { selectFavoriteOffers } from '../../store/main/main';

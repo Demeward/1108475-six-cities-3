@@ -2,7 +2,7 @@ import CitiesOffers from '../cities-offers/cities-offers';
 import OffersMap from '../offers-map/offers-map';
 import { Offer } from '../../types/offer';
 import { useState, useCallback } from 'react';
-import { useAppSelector } from '../../store';
+import { useAppSelector } from '../../hooks/index';
 import { selectFilteredOffers } from '../../store/main/main';
 
 type CitiesContentProps = {
