@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import { Action } from 'redux';
 import { extractActionsTypes } from '../../utils/test';
 import { State, AppThunkDispatch } from '../../types/state';
-import { APIRoute, RequestStatus } from '../../const';
+import { APIRoute, RequestStatus, StatusCode } from '../../const';
 import { mockOffers } from '../../mocks/offers';
 import { fetchFavoriteOffersAction, fetchOffersAction } from './api-action';
 
@@ -46,7 +46,7 @@ describe('Async functions', () => {
     });
 
     it('should dispatch "fetchOffersAction.pending", "fetchOffersAction.rejected" when server response 400', async () => {
-      mockAxiosAdapter.onGet(APIRoute.Offers).reply(400, []);
+      mockAxiosAdapter.onGet(APIRoute.Offers).reply(StatusCode.BadRequest, []);
 
       await store.dispatch(fetchOffersAction());
       const actions = extractActionsTypes(store.getActions());
@@ -79,7 +79,7 @@ describe('Async functions', () => {
     });
 
     it('should dispatch "fetchFavoriteOffersAction.pending", "fetchFavoriteOffersAction.rejected" when server response 400', async () => {
-      mockAxiosAdapter.onGet(APIRoute.Favorites).reply(400, []);
+      mockAxiosAdapter.onGet(APIRoute.Favorites).reply(StatusCode.BadRequest, []);
 
       await store.dispatch(fetchFavoriteOffersAction());
       const actions = extractActionsTypes(store.getActions());

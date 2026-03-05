@@ -73,4 +73,6 @@ export enum RequestStatus {
   Error = 'ERROR',
 }
 
+export const ERROR_MESSAGE_TIMEOUT = 3000;
+
 export const CITIES: string[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];

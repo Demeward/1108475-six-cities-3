@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { Action } from 'redux';
 import { extractActionsTypes } from '../../utils/test';
 import { State, AppThunkDispatch } from '../../types/state';
-import { APIRoute, RequestStatus } from '../../const';
+import { APIRoute, RequestStatus, StatusCode } from '../../const';
 import { mockOffers, mockOfferFull } from '../../mocks/offers';
 import { mockReviews, mockNewReview } from '../../mocks/reviews';
 import { fetchOfferAction, fetchNearOffersAction, fetchReviewsAction, postReviewAction, updateFavoriteStatusAction } from './api-action';
@@ -51,7 +51,7 @@ describe('Async functions', () => {
     });
 
     it('should dispatch "fetchOfferAction.pending", "fetchOfferAction.rejected" when server response 404', async () => {
-      mockAxiosAdapter.onGet(`${APIRoute.Offers}/${123}`).reply(404);
+      mockAxiosAdapter.onGet(`${APIRoute.Offers}/${123}`).reply(StatusCode.NotFound);
 
       const result = await store.dispatch(fetchOfferAction('123'));
 
@@ -92,7 +92,7 @@ describe('Async functions', () => {
     });
 
     it('should dispatch "fetchNearOffersAction.pending", "fetchNearOffersAction.rejected" when server response 404', async () => {
-      mockAxiosAdapter.onGet(generatePath(APIRoute.NearOffers, { id: '123' })).reply(404);
+      mockAxiosAdapter.onGet(generatePath(APIRoute.NearOffers, { id: '123' })).reply(StatusCode.NotFound);
 
       const result = await store.dispatch(fetchNearOffersAction('123'));
 
@@ -129,7 +129,7 @@ describe('Async functions', () => {
     });
 
     it('should dispatch "fetchReviewsAction.pending", "fetchReviewsAction.rejected" when server response 404', async () => {
-      mockAxiosAdapter.onGet(`${APIRoute.Comments}/123`).reply(404);
+      mockAxiosAdapter.onGet(`${APIRoute.Comments}/123`).reply(StatusCode.NotFound);
 
       const result = await store.dispatch(fetchReviewsAction('123'));
 
@@ -166,7 +166,7 @@ describe('Async functions', () => {
     });
 
     it('should dispatch "postReviewAction.pending", "postReviewAction.rejected" when server response 400', async () => {
-      mockAxiosAdapter.onPost(`${APIRoute.Comments}/${mockOfferFull.id}`).reply(400);
+      mockAxiosAdapter.onPost(`${APIRoute.Comments}/${mockOfferFull.id}`).reply(StatusCode.BadRequest);
 
       const result = await store.dispatch(postReviewAction(mockNewReview));
 
@@ -224,7 +224,7 @@ describe('Async functions', () => {
     });
 
     it('should dispatch "updateFavoriteStatusAction.pending", "updateFavoriteStatusAction.rejected" when server response 400', async () => {
-      mockAxiosAdapter.onPost(generatePath(APIRoute.FavoriteStatus, { id: mockOfferFull.id, status: '2' })).reply(400);
+      mockAxiosAdapter.onPost(generatePath(APIRoute.FavoriteStatus, { id: mockOfferFull.id, status: '2' })).reply(StatusCode.BadRequest);
 
       const result = await store.dispatch(updateFavoriteStatusAction({ offerId: mockOfferFull.id, isFavorite: mockOfferFull.isFavorite }));
 
