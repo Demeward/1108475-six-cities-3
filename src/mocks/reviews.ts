@@ -1,4 +1,4 @@
-import { Comment } from '../types/comment';
+import { Comment, Review } from '../types/comment';
 
 const mockReviews: Comment[] = [
   {
@@ -47,7 +47,7 @@ const mockReviews: Comment[] = [
   },
 ];
 
-const mockNewReview = {
+const mockNewReview: Review = {
   comment: 'Home is amazing. It`s like staying in a museum. The rooms, furnishings and artworks are incredible. The views of My Vesuvius',
   rating: 4,
   offerId: '1'

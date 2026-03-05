@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { Action } from 'redux';
 import { extractActionsTypes } from '../../utils/test';
 import { State, AppThunkDispatch } from '../../types/state';
-import { APIRoute, AuthorizationStatus } from '../../const';
+import { APIRoute, AuthorizationStatus, StatusCode } from '../../const';
 import { checkAuthorizationAction, loginAction, logoutAction } from './api-action';
 import { CredentialsData, UserData } from '../../types/auth';
 import * as tokenStorage from '../../api/token';
@@ -66,7 +66,7 @@ describe('Async functions', () => {
     });
 
     it('should dispatch "checkAuthorizationAction.pending", "checkAuthorizationAction.rejected" when server response 401', async () => {
-      mockAxiosAdapter.onGet(APIRoute.Login).reply(401, {});
+      mockAxiosAdapter.onGet(APIRoute.Login).reply(StatusCode.Unauthorized, {});
 
       await store.dispatch(checkAuthorizationAction());
       const actions = extractActionsTypes(store.getActions());
@@ -108,7 +108,7 @@ describe('Async functions', () => {
     });
 
     it('should dispatch "loginAction.pending", "loginAction.rejected" when server response 400', async () => {
-      mockAxiosAdapter.onPost(APIRoute.Login).reply(400, {});
+      mockAxiosAdapter.onPost(APIRoute.Login).reply(StatusCode.BadRequest, {});
 
       await store.dispatch(loginAction(mockCredentials));
       const actions = extractActionsTypes(store.getActions());
